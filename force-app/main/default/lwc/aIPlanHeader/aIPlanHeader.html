@@ -1,0 +1,38 @@
+<template>
+    <lightning-card title="AIPlanHeader" icon-name="custom:custom14">
+        <div class = "topic">
+        <h1>AI Recommerder Plan</h1>
+        <p>AI based Recommender Plan Procces page. Make modifications for the plan and click Generate plan button to get the summery</p>
+        </div>
+
+        <div class = "userData">
+        <table>
+            <tr>
+              <td>Plan Name:</td>
+              <td>{planName}</td>
+            </tr>
+            <tr>
+              <td>Assessment:</td>
+              <td>{planAssesment}</td>
+            </tr>
+            <tr>
+              <td>Plan ID:</td>
+              <td>{planID}</td>
+            </tr>
+            <tr>
+                <td>Owner:</td>
+                <td>{planOwner}</td>
+            </tr>
+            <tr>
+                <td>Created By:</td>
+                <td>{planCreator}</td>
+            </tr>
+            <tr>
+                <td>Last Modified By:</td>
+                <td>{planModifier}</td>
+            </tr>            
+          </table>
+        </div>
+    
+    </lightning-card>   
+</template>
