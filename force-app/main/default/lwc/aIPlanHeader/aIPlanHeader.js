@@ -20,6 +20,7 @@ const settlementPlanFields = [
 
 export default class AIPlanHeader extends LightningElement {
     
+    // @api planId;
     @api planId = 'a33Aw0000000QVZIA2'; 
 
     // @wire(getRecord, { recordId: '$planId', fields: [SETTLEMENT_PLAN_FEILD_ID, SETTLEMENT_PLAN_FEILD_NAME] })

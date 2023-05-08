@@ -1,44 +1,64 @@
 <template>
     <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
         <div class = "processBody">
-            <h1>AI Recommerder Plan</h1>
+            <h1>AI Recommerder Plan New 1</h1>
         </div>
 
         <div class = "displayData">
             <p>Parent Plan ID: {parentPlanID}</p>
         </div>
 
-        <p>child list</p> 
-        <template lwc:if={records}>
+        <div class = "displayData">
+            <p>Child Plan ID TEST: {parentChildID}</p>
+        </div>
+
+        <template lwc:if={relatedLists}>
             <div class="slds-m-around_medium">
-                <template for:each={records} for:item="rec">
+                <p>Add sections</p>
+                <template for:each={relatedLists} for:item="relatedList">
+                    <p key={relatedList.label}>
+                        {relatedList.label}
+                    </p>
+                </template>
+            </div>
+        </template>          
+
+        <template lwc:if={statementRecords}>
+            <div class="slds-m-around_medium">
+                <template for:each={statementRecords} for:item="rec">
                     <p key={rec.fields.Action_ID__c.value}>
                         {rec.fields.Name.value}
                     </p>
                 </template>
             </div>
-        </template>
+         </template>
 
-        <template if:false={records}>
-            <p>No records found</p>
-        </template>
-
-        <p>Call child list</p>
-        <template if:true={childRecords}>
-            <p>Child list exist</p>   
-            <p>Number of Child Records of plan: {childRecordCount}</p>          
-        </template>   
-
-        <!-- <template for:each={childRecords} for:item="rec">
-            <p key={rec.fields.Action_ID__c}>
-                {rec.fields.Name}
-            </p>
-        </template> -->
-        
-        <template if:false={childRecords}>
-            <p>No records found</p>
-        </template>      
+         
+         <!-- <table>
+            <thead>
+                <tr>
+                    <th>Child Name</th>
+                    <th>Sub-Child Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={statementRecords} for:item="child">
+                    <tr key={child.Id}>
+                        <td>{child.Name}</td>
+                        <td>
+                            <template for:each={child.subChildRecords} for:item="subChild">
+                                <div key={subChild.Id}>{subChild.Name}</div>
+                            </template>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>          -->
+      
 
     </lightning-card>
     
 </template>
+
+
+
