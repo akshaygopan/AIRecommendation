@@ -1,0 +1,38 @@
+public with sharing class PlanRelatedListHandler {
+    public PlanRelatedListHandler() 
+    {
+
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Map<Auto_Recomandation__c, List<Recommended_Action__c>> getPlanRelatedLists(String planId) 
+    {
+        //console.log('getPlanRelatedLists called');
+
+        Map<Auto_Recomandation__c, List<Recommended_Action__c>> childToSubChildMap = new Map<Auto_Recomandation__c, List<Recommended_Action__c>>();
+
+        List<Auto_Recomandation__c> childRecords = [SELECT Id,Name, (SELECT Id, Name, Action__c FROM Recommended_Actions__r) FROM Auto_Recomandation__c WHERE Auto_Settlement_Plan__c = 'a33Aw0000000QVZIA2'];
+
+        for (Auto_Recomandation__c child : childRecords) 
+        {
+            List<Recommended_Action__c> subChildRecords = child.Recommended_Actions__r;
+            childToSubChildMap.put(child, subChildRecords);
+        }
+        
+        System.debug(childToSubChildMap);
+        //console.log(childToSubChildMap);
+        
+        for(Auto_Recomandation__c child : childToSubChildMap.keySet())
+        {
+            System.debug('Child Object: ' + child.Name);
+            List<Recommended_Action__c> subChildList = childToSubChildMap.get(child);
+            for(Recommended_Action__c subChild : subChildList)
+            {
+               System.debug('Sub-Child Object: ' + subChild.Action__c);
+        	}
+		}
+
+        return childToSubChildMap;
+
+    }
+}

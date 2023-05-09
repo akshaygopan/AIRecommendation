@@ -10,9 +10,36 @@
 
         <div class = "displayData">
             <p>Child Plan ID TEST: {parentChildID}</p>
+            <p>Child Plan ID ID: {parentChildRecordID}</p>
         </div>
 
-        <template lwc:if={relatedLists}>
+        
+            <!-- <template if:true={childToSubChildMap}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Child Name</th>
+                            <th>Sub-Child Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={childToSubChildMap} for:item="child">
+                            <template for:each={child.subChildList} for:item="subChild">
+                                <tr key={subChild.Id}>
+                                    <td>{child.Name}</td>
+                                    <td>{subChild.Name}</td>
+                                </tr>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:false={childToSubChildMap}>
+                No data to display.
+            </template> -->
+     
+
+        <!-- <template lwc:if={relatedLists}>
             <div class="slds-m-around_medium">
                 <p>Add sections</p>
                 <template for:each={relatedLists} for:item="relatedList">
@@ -21,9 +48,10 @@
                     </p>
                 </template>
             </div>
-        </template>          
+        </template>           -->
 
-        <template lwc:if={statementRecords}>
+        <!-- <template lwc:if={statementRecords}>
+            <p>Related List</p>
             <div class="slds-m-around_medium">
                 <template for:each={statementRecords} for:item="rec">
                     <p key={rec.fields.Action_ID__c.value}>
@@ -31,7 +59,18 @@
                     </p>
                 </template>
             </div>
-         </template>
+         </template> -->
+
+         <!-- <template lwc:if={testRecords}>
+            <p>Test List</p>
+            <div class="slds-m-around_medium">
+                <template for:each={testRecords} for:item="test">
+                    <p key={test.fields.Action_ID__c.value}>
+                        {test.fields.Action__c.value}
+                    </p>
+                </template>
+            </div>
+         </template>  -->
 
          
          <!-- <table>
