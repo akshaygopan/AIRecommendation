@@ -1,0 +1,214 @@
+<template> 
+    <!-- <p>Display statements</p>
+    <template lwc:if={statements}>
+     <p>Has Data</p>
+     <template for:each={statements} for:item="acc">
+       <p key={acc.id}>
+           {acc.Name}
+       </p>
+     </template>
+   </template>
+   <template if:false={statements}>
+     <p>No data to display.</p>
+   </template>   -->
+
+    <div class="slds-box" if:true={recommendations}>
+        <p>Has Data</p>
+        <table class="slds-table">
+            <tbody for:each={currentPlanRelatedLists} for:item="pro" key={pro.key}>
+                <p>Iterate Map</p>
+                <tr class="slds-hint-parent">
+                    <td>
+                        <div class="slds-truncate" >{pro.value}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- <table>
+        <thead>
+            <tr>
+                <th>Recommendation Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={recommendations} for:item="recommendation">
+                <tr key={recommendation.Id}>
+                    <td>{recommendation.Name}</td>
+                    <td>
+                        <ul>
+                            <template for:each={recommendation.Recommended_Actions__r} for:item="action">
+                                <li key={action.Id}>{action.Name} - {action.Action__c}</li>
+                            </template>
+                        </ul>
+                    </td>
+                </tr>
+            </template>
+        </tbody>
+    </table> -->
+
+    <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
+        <!-- <div class = "processBody">
+            <h1>AI Recommerder Plan New 1</h1>
+        </div>
+
+        <div class = "displayData">
+            <p>Parent Plan ID: {parentPlanID}</p>
+        </div>
+
+        <div class = "displayData">
+            <p>Child Plan ID TEST: {parentChildID}</p>
+            <p>Child Plan ID ID: {parentChildRecordID}</p>
+        </div> -->
+
+        
+            <!-- <template if:true={childToSubChildMap}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Child Name</th>
+                            <th>Sub-Child Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={childToSubChildMap} for:item="child">
+                            <template for:each={child.subChildList} for:item="subChild">
+                                <tr key={subChild.Id}>
+                                    <td>{child.Name}</td>
+                                    <td>{subChild.Name}</td>
+                                </tr>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:false={childToSubChildMap}>
+                No data to display.
+            </template> -->
+     
+
+        <!-- <template lwc:if={relatedLists}>
+            <div class="slds-m-around_medium">
+                <p>Add sections</p>
+                <template for:each={relatedLists} for:item="relatedList">
+                    <p key={relatedList.label}>
+                        {relatedList.label}
+                    </p>
+                </template>
+            </div>
+        </template>           -->
+
+        <!-- <template lwc:if={statementRecords}>
+            <p>Related List</p>
+            <div class="slds-m-around_medium">
+                <template for:each={statementRecords} for:item="rec">
+                    <p key={rec.fields.Action_ID__c.value}>
+                        {rec.fields.Name.value}
+                    </p>
+                </template>
+            </div>
+         </template> -->
+
+         <!-- <template lwc:if={testRecords}>
+            <p>Test List</p>
+            <div class="slds-m-around_medium">
+                <template for:each={testRecords} for:item="test">
+                    <p key={test.fields.Action_ID__c.value}>
+                        {test.fields.Action__c.value}
+                    </p>
+                </template>
+            </div>
+         </template>  -->
+
+         
+         <!-- <table>
+            <thead>
+                <tr>
+                    <th>Child Name</th>
+                    <th>Sub-Child Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={statementRecords} for:item="child">
+                    <tr key={child.Id}>
+                        <td>{child.Name}</td>
+                        <td>
+                            <template for:each={child.subChildRecords} for:item="subChild">
+                                <div key={subChild.Id}>{subChild.Name}</div>
+                            </template>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>          -->
+
+        
+        <div class="outermost-box">
+            <div class="title-rectangle">
+              <span class="title">Transport and Mobility</span>
+            </div>
+            <div class="outer-box">
+              <div class="title-box">Access to transportation</div>
+              <div class="container">
+                <div class="left-container">
+                  <div class="top-box">
+                    <p class="green-paragraph">I do not have a Canadian driver's license</p>
+                  </div>
+                  <div class="middle-container">
+                    <div class="middle-left-box">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+                    </div>
+                    <div class="inner-box">
+                        <ul>
+                            <li class="list_item">Apply for Afforrdable Bus Pass</li>
+                            <li class="list_item">Apply for an Ontario Drivers License</li>
+                            <li class="list_item">Get a map of the city and a bus schedule-app?</li>
+                            <li class="list_item">Learn about public transportations and options</li>
+                          </ul>
+                          <div>
+                            <input type="text" class="input_text" placeholder="Other">
+                          </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="left-container">
+                  <div class="top-box">
+                    <p class="green-paragraph">I walk to get around</p>
+                  </div>
+                  <div class="middle-container">
+                    <div class="middle-left-box">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" class="input_checkbox">
+
+                    </div>
+                    <div class="inner-box">
+                      <ul>
+                        <li class="list_item">Find a local Driving School</li>
+                        <li class="list_item">Apply for Afforrdable Bus Pass Program</li>
+                        <li class="list_item">Learn more about alternative transport, car rental</li>
+                        <li class="list_item">Attend G1 information session</li>
+                      </ul>
+                      <div>
+                        <input type="text" class="input_text" placeholder="Other">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+    </lightning-card>
+
+    
+</template>
