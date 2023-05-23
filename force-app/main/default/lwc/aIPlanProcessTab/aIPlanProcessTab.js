@@ -15,6 +15,9 @@ import SETTLEMENT_PLAN_FEILD_ID from '@salesforce/schema/Auto_Settlement_Plan__c
 import AUTO_REC_OBJECT from '@salesforce/schema/Auto_Recomandation__c';
 import AUTO_REC_FEILD_ID from '@salesforce/schema/Auto_Recomandation__c.Action_ID__c';
 import AUTO_REC_FEILD_NAME from '@salesforce/schema/Auto_Recomandation__c.Name';
+import AUTO_REC_FEILD_MAIN_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Main_Catergory__c';
+import AUTO_REC_FEILD_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Category__c';
+
 
 import ACTION_OBJECT from '@salesforce/schema/Recommended_Action__c';
 import ACTION_FEILD_ID from '@salesforce/schema/Recommended_Action__c.Action_ID__c';
@@ -38,8 +41,35 @@ export default class AIPlanProcessTab extends LightningElement {
     @api recoId2 = 'a32Aw00000009jFIAQ'; 
     @api testIDList = ['a32Aw0000000A5pIAE', 'a32Aw00000009jFIAQ'];
 
-    @wire(getRecord, { recordId: '$recoId', fields: [AUTO_REC_FEILD_NAME, ACTION_FEILD_RECORD_ID] })
+    @wire(getRecord, { recordId: '$recoId', fields: [AUTO_REC_FEILD_NAME, ACTION_FEILD_RECORD_ID, AUTO_REC_FEILD_MAIN_CATEGORY, AUTO_REC_FEILD_CATEGORY, ACTION_FEILD_NAME, ] })
     planChild;
+
+    get autoRecFieldName() {
+        return getFieldValue(this.planChild.data, AUTO_REC_FEILD_NAME);
+    }
+
+    get actionFieldName() {
+        return getFieldValue(this.planChild.data, ACTION_FEILD_NAME);
+    }
+
+    get checkActionFieldName() {
+        const fieldValue = getFieldValue(this.planChild.data, AUTO_REC_FEILD_NAME);
+        const isList = Array.isArray(fieldValue);
+        console.log('Is ACTION_FEILD_NAME a list?', isList);
+        return fieldValue;
+    }
+
+
+
+
+    get autoRecFieldMainCategory() {
+        return 'General';
+        // return getFieldValue(this.planChild.data,AUTO_REC_FEILD_MAIN_CATEGORY);
+    }
+
+    get autoRecFieldCategory() {
+        return getFieldValue(this.planChild.data,AUTO_REC_FEILD_CATEGORY);
+    }
 
     get parentChildID(){
         return this.planChild.data ? getFieldValue(this.planChild.data, AUTO_REC_FEILD_NAME) : 'null';
