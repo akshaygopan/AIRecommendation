@@ -152,21 +152,74 @@ export default class AIPlanProcessTab extends LightningElement {
 
     }
 
+    // @track childToSubChildMap;
+    // @track errorx;
+    // @wire(getPlanRelatedLists, { parentId: '$recordId' })
+    // wiredResult({ error, data }) {
+    //     console.log('wiredResult');
+    //     if (data) {
+    //         console.log('HAS DATA getPlanRelatedLists');
+    //         this.childToSubChildMap = data;
+    //         console.log(this.childToSubChildMap);
+    //     } else if (error) {
+    //         console.log('ERROR getPlanRelatedLists');
+    //         this.errorx = error;
+    //     }
+    // }
+
+
     @track childToSubChildMap;
     @track errorx;
-    @wire(getPlanRelatedLists, { parentId: '$recordId' })
+    
+    @wire(getPlanRelatedLists, { planId: '$recordId' })
     wiredResult({ error, data }) {
         console.log('wiredResult');
         if (data) {
             console.log('HAS DATA getPlanRelatedLists');
             this.childToSubChildMap = data;
             console.log(this.childToSubChildMap);
+    
+            // Print object names and features
+            console.log('------------------------');
+
+    
+            for (let child of Object.keys(this.childToSubChildMap)) {
+                let childObject = child;
+                console.log('Child Objec: ' + childObject);
+                let Statement_Main_Catergory_match = childObject.match(/Statement_Main_Catergory__c:([^,]+)/);
+                if (Statement_Main_Catergory_match && Statement_Main_Catergory_match.length > 1) {
+                   let main_category = Statement_Main_Catergory_match[1].trim();
+                   console.log('statemet Block_main cat: ' + main_category);
+                }
+                let Statement_Category_match = childObject.match(/Statement_Category__c:([^,]+)/);
+                 if (Statement_Category_match && Statement_Category_match.length > 1) {
+                    let category = Statement_Category_match[1].trim();
+                    console.log('statement Block_category: ' + category);
+                 }
+                let nameMatch = childObject.match(/Name:([^,]+)/);
+                if (nameMatch && nameMatch.length > 1) {
+                   let name = nameMatch[1].trim();
+                   console.log('statement Block_name: ' + name);
+                }
+    
+                // Actions
+                let subChildList = this.childToSubChildMap[child];
+                for (let subChild of subChildList) {
+                    console.log('Action list element: ' + subChild.Action__c);
+                }
+            }
+    
+            console.log('------------------------');
         } else if (error) {
             console.log('ERROR getPlanRelatedLists');
             this.errorx = error;
         }
     }
-
+    
+    
+    
+        // Other component code goes here
+    
     
     
 
@@ -303,12 +356,5 @@ export default class AIPlanProcessTab extends LightningElement {
     //     }
     // }
 
-    
-
-    
-
 
 }
-
-
-
