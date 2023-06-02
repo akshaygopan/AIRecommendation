@@ -170,6 +170,12 @@ export default class AIPlanProcessTab extends LightningElement {
 
     @track childToSubChildMap;
     @track errorx;
+    @track main_category;
+    @track sub_category;
+    @track name;
+
+
+
     
     @wire(getPlanRelatedLists, { planId: '$recordId' })
     wiredResult({ error, data }) {
@@ -190,16 +196,26 @@ export default class AIPlanProcessTab extends LightningElement {
                 if (Statement_Main_Catergory_match && Statement_Main_Catergory_match.length > 1) {
                    let main_category = Statement_Main_Catergory_match[1].trim();
                    console.log('statemet Block_main cat: ' + main_category);
+                   this.main_category = main_category;
+
+
+                //    let mainCategoryTitleElement = document.getElementById("mainCategoryTitle");
+                //    if (mainCategoryTitleElement) {
+                //     mainCategoryTitleElement.textContent = main_category;
+                //   }
                 }
                 let Statement_Category_match = childObject.match(/Statement_Category__c:([^,]+)/);
                  if (Statement_Category_match && Statement_Category_match.length > 1) {
                     let category = Statement_Category_match[1].trim();
                     console.log('statement Block_category: ' + category);
+                    this.sub_category = category;
+
                  }
                 let nameMatch = childObject.match(/Name:([^,]+)/);
                 if (nameMatch && nameMatch.length > 1) {
                    let name = nameMatch[1].trim();
                    console.log('statement Block_name: ' + name);
+                   this.name = name;
                 }
     
                 // Actions

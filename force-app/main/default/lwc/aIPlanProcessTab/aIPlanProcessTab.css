@@ -29,28 +29,28 @@
 .outer-box {
   background-color: #E8F5E2;
   padding: 20px;
-  height: cal(100%-40px);
+  height: calc(100% - 40px);
   margin: 5px;
   padding: 5px;
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-left: 19px; 
+  margin-left: 19px;
 }
 
 .container {
-  flex: 1; 
+  flex: 1;
   display: flex;
   flex-direction: row;
-  margin-top: 10px; 
+  margin-top: 10px;
 }
 
 .left-container {
-  width: 50%; 
+  width: 50%;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; 
+  justify-content: space-between;
 }
 
 .top-box {
@@ -60,7 +60,7 @@
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: center
+  justify-content: center;
 }
 
 .middle-container {
@@ -78,25 +78,35 @@
   border-radius: 5px;
   margin-bottom: 5px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
-
 }
 
-.inner-box{
+.inner-box {
   display: flex;
-    height: 100%;
-    align-items: stretch;
-    background-color: white;
-    padding: 10px;
-    position: relative;
-    flex: 1;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    flex-direction: column;
-    justify-content: center;
+  height: 100%;
+  align-items: stretch;
+  background-color: white;
+  padding: 10px;
+  position: relative;
+  flex: 1;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5px;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 5px;
+  align-self: flex-start;
 }
 
 .checkbox-label {
@@ -105,7 +115,6 @@
 
 .title-box {
   background-color: #9EBA91;
-  /* margin-bottom: 10px; */
   padding: 5px 10px;
 }
 
@@ -120,15 +129,16 @@
   font-size: 14px;
   padding: 10px;
   border-radius: 5px;
-  margin-top: 10px; 
-  margin-bottom: 10px; 
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.input_checkbox{
-  margin: -5px;
+.input_checkbox {
+  margin: 0;
   box-sizing: border-box;
   width: 20px;
   height: 20px;
+  align-self: flex-start;
 }
 
 .input_checkbox:checked {
@@ -136,21 +146,10 @@
   border-color: #1b1c1d;
 }
 
-/* Create a custom checkmark */
-/* .input_checkbox::before {
-  margin: -5px;
-  box-sizing: border-box;
-  width: 20px;
-  height: 20px;
-} */
-
-
-/* .list_item{
-  
-  border-bottom: 1px solid #000;
-} */
-
-.list_item{
+.list_item {
   border-bottom: 0.5px solid #23212150;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
 }

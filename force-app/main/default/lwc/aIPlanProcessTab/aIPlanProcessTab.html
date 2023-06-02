@@ -1,155 +1,88 @@
 <template>
     <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
-        <!-- <div class = "processBody">
-            <h1>AI Recommerder Plan New 1</h1>
-        </div>
-
-        <div class = "displayData">
-            <p>Parent Plan ID: {parentPlanID}</p>
-        </div>
-
-        <div class = "displayData">
-            <p>Child Plan ID TEST: {parentChildID}</p>
-            <p>Child Plan ID ID: {parentChildRecordID}</p>
-        </div> -->
-
-        
-            <!-- <template if:true={childToSubChildMap}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Child Name</th>
-                            <th>Sub-Child Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template for:each={childToSubChildMap} for:item="child">
-                            <template for:each={child.subChildList} for:item="subChild">
-                                <tr key={subChild.Id}>
-                                    <td>{child.Name}</td>
-                                    <td>{subChild.Name}</td>
-                                </tr>
-                            </template>
-                        </template>
-                    </tbody>
-                </table>
-            </template>
-            <template if:false={childToSubChildMap}>
-                No data to display.
-            </template> -->
-     
-
-        <!-- <template lwc:if={relatedLists}>
-            <div class="slds-m-around_medium">
-                <p>Add sections</p>
-                <template for:each={relatedLists} for:item="relatedList">
-                    <p key={relatedList.label}>
-                        {relatedList.label}
-                    </p>
-                </template>
-            </div>
-        </template>           -->
-
-        <!-- <template lwc:if={statementRecords}>
-            <p>Related List</p>
-            <div class="slds-m-around_medium">
-                <template for:each={statementRecords} for:item="rec">
-                    <p key={rec.fields.Action_ID__c.value}>
-                        {rec.fields.Name.value}
-                    </p>
-                </template>
-            </div>
-         </template> -->
-
-         <!-- <template lwc:if={testRecords}>
-            <p>Test List</p>
-            <div class="slds-m-around_medium">
-                <template for:each={testRecords} for:item="test">
-                    <p key={test.fields.Action_ID__c.value}>
-                        {test.fields.Action__c.value}
-                    </p>
-                </template>
-            </div>
-         </template>  -->
-
-         
-         <!-- <table>
-            <thead>
-                <tr>
-                    <th>Child Name</th>
-                    <th>Sub-Child Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template for:each={statementRecords} for:item="child">
-                    <tr key={child.Id}>
-                        <td>{child.Name}</td>
-                        <td>
-                            <template for:each={child.subChildRecords} for:item="subChild">
-                                <div key={subChild.Id}>{subChild.Name}</div>
-                            </template>
-                        </td>
-                    </tr>
-                </template>
-            </tbody>
-        </table>          -->
+       
         <div class="outermost-box">
             <div class="title-rectangle">
-              <span class="title">{autoRecFieldMainCategory}</span>
+              <span class="title">{main_category}</span>
             </div>
             <div class="outer-box">
               <div class="title-box">
-                {autoRecFieldCategory}
+                {sub_category}
               </div>
               <div class="container">
                 <div class="left-container">
                   <div class="top-box">
                     <p class="green-paragraph">
-                        {autoRecFieldName}
+                      {name}
                     </p>
                   </div>
                   <div class="middle-container">
                     <div class="middle-left-box">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
+                      <input type="checkbox" id="checkbox1" class="input_checkbox">
+                      <label for="checkbox1" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox2" class="input_checkbox">
+                      <label for="checkbox2" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox3" class="input_checkbox">
+                      <label for="checkbox3" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox4" class="input_checkbox">
+                      <label for="checkbox4" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox5" class="input_checkbox">
+                      <label for="checkbox5" class="checkbox_label"></label>
                     </div>
                     <div class="inner-box">
-                        <ul>
-                            <li class="list_item">Apply for Afforrdable Bus Pass</li>
-                            <li class="list_item">Apply for an Ontario Drivers License</li>
-                            <li class="list_item">Get a map of the city and a bus schedule-app?</li>
-                            <li class="list_item">Learn about public transportations and options</li>
-                          </ul>
-                          <div>
-                            <input type="text" class="input_text" placeholder="Other">
-                          </div>
+                      <ul>
+                        <li class="list_item">
+                          <label for="checkbox1" class="checkbox_label">Apply for Affordable Bus Pass</label>
+                        </li>
+                        <li class="list_item">
+                          <label for="checkbox2" class="checkbox_label">Apply for an Ontario Driver's License</label>
+                        </li>
+                        <li class="list_item">
+                          <label for="checkbox3" class="checkbox_label">Get a map of the city and a bus schedule-app?</label>
+                        </li>
+                        <li class="list_item">
+                          <label for="checkbox4" class="checkbox_label">Learn about public transportation options</label>
+                        </li>
+                      </ul>
+                      <div>
+                        <input type="text" class="input_text" placeholder="Other">
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="left-container">
                   <div class="top-box">
                     <p class="green-paragraph">
-                        I walk to get around
-                     </p>
+                      I walk to get around
+                    </p>
                   </div>
                   <div class="middle-container">
                     <div class="middle-left-box">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
-                      <input type="checkbox" class="input_checkbox">
-
+                      <input type="checkbox" id="checkbox6" class="input_checkbox">
+                      <label for="checkbox6" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox7" class="input_checkbox">
+                      <label for="checkbox7" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox8" class="input_checkbox">
+                      <label for="checkbox8" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox9" class="input_checkbox">
+                      <label for="checkbox9" class="checkbox_label"></label>
+                      <input type="checkbox" id="checkbox10" class="input_checkbox">
+                      <label for="checkbox10" class="checkbox_label"></label>
                     </div>
                     <div class="inner-box">
                       <ul>
-                        <li class="list_item">Find a local Driving School</li>
-                        <li class="list_item">Apply for Afforrdable Bus Pass Program</li>
-                        <li class="list_item">Learn more about alternative transport, car rental</li>
-                        <li class="list_item">Attend G1 information session</li>
+                        <li class="list_item">
+                          <label for="checkbox6" class="checkbox_label">Find a local Driving School</label>
+                        </li>
+                        <li class="list_item">
+                          <label for="checkbox7" class="checkbox_label">Apply for Affordable Bus Pass Program</label>
+                        </li>
+                        <li class="list_item">
+                          <label for="checkbox8" class="checkbox_label">Learn more about alternative transport, car rental</label>
+                        </li>
+                        <li class="list_item">
+                          <label for="checkbox9" class="checkbox_label">Attend G1 information session</label>
+                        </li>
                       </ul>
                       <div>
                         <input type="text" class="input_text" placeholder="Other">
@@ -160,6 +93,7 @@
               </div>
             </div>
           </div>
+          
           
 
     </lightning-card>
