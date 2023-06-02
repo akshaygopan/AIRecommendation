@@ -132,7 +132,6 @@ export default class AIPlanProcessTab extends LightningElement {
         }
     }
 
-
     handleChildRecords(myId) {
         // console.log('XXXXXXXX');
         // console.log(myId);
@@ -168,69 +167,138 @@ export default class AIPlanProcessTab extends LightningElement {
     // }
 
 
+    
+
     @track childToSubChildMap;
     @track errorx;
     @track main_category;
     @track sub_category;
     @track name;
 
-
-
-    
     @wire(getPlanRelatedLists, { planId: '$recordId' })
-    wiredResult({ error, data }) {
-        console.log('wiredResult');
-        if (data) {
-            console.log('HAS DATA getPlanRelatedLists');
-            this.childToSubChildMap = data;
-            console.log(this.childToSubChildMap);
-    
-            // Print object names and features
-            console.log('------------------------');
+wiredResult({ error, data }) {
+    console.log('wiredResult');
+    if (data) {
+        console.log('HAS DATA getPlanRelatedLists');
+        this.childToSubChildMap = data;
 
-    
-            for (let child of Object.keys(this.childToSubChildMap)) {
-                let childObject = child;
-                console.log('Child Objec: ' + childObject);
-                let Statement_Main_Catergory_match = childObject.match(/Statement_Main_Catergory__c:([^,]+)/);
-                if (Statement_Main_Catergory_match && Statement_Main_Catergory_match.length > 1) {
-                   let main_category = Statement_Main_Catergory_match[1].trim();
-                   console.log('statemet Block_main cat: ' + main_category);
-                   this.main_category = main_category;
+        console.log(this.childToSubChildMap);
 
+        if (this.childToSubChildMap && typeof this.childToSubChildMap === 'object') {
 
-                //    let mainCategoryTitleElement = document.getElementById("mainCategoryTitle");
-                //    if (mainCategoryTitleElement) {
-                //     mainCategoryTitleElement.textContent = main_category;
-                //   }
+            let tree = {};
+
+            for (let child in this.childToSubChildMap) {
+                console.log(child);
+
+                let mainCategory, category, name, actions = [];
+
+                let mainCategoryMatch = child.match(/Statement_Main_Catergory__c:([^,]+)/);
+                let categoryMatch = child.match(/Statement_Category__c:([^,]+)/);
+                let nameMatch = child.match(/Name:([^,]+)/);
+
+                if (mainCategoryMatch && mainCategoryMatch.length > 1) {
+                    mainCategory = mainCategoryMatch[1].trim();
                 }
-                let Statement_Category_match = childObject.match(/Statement_Category__c:([^,]+)/);
-                 if (Statement_Category_match && Statement_Category_match.length > 1) {
-                    let category = Statement_Category_match[1].trim();
-                    console.log('statement Block_category: ' + category);
-                    this.sub_category = category;
-
-                 }
-                let nameMatch = childObject.match(/Name:([^,]+)/);
+                if (categoryMatch && categoryMatch.length > 1) {
+                    category = categoryMatch[1].trim();
+                }
                 if (nameMatch && nameMatch.length > 1) {
-                   let name = nameMatch[1].trim();
-                   console.log('statement Block_name: ' + name);
-                   this.name = name;
+                    name = nameMatch[1].trim();
                 }
-    
-                // Actions
-                let subChildList = this.childToSubChildMap[child];
-                for (let subChild of subChildList) {
-                    console.log('Action list element: ' + subChild.Action__c);
+                let actionObjects = this.childToSubChildMap[child];
+                for (let actionObject of actionObjects) {
+                    actions.push(actionObject.Action__c);
+                }
+
+                if (mainCategory && category && name && actions.length > 0) {
+                    if (!tree[mainCategory]) {
+                        tree[mainCategory] = {};
+                    }
+                    if (!tree[mainCategory][category]) {
+                        tree[mainCategory][category] = {};
+                    }
+                    if (!tree[mainCategory][category][name]) {
+                        tree[mainCategory][category][name] = [];
+                    }
+                    tree[mainCategory][category][name].push(actions);
                 }
             }
-    
-            console.log('------------------------');
-        } else if (error) {
-            console.log('ERROR getPlanRelatedLists');
-            this.errorx = error;
+
+            for (let mainCategory in tree) {
+                console.log(mainCategory);
+                for (let category in tree[mainCategory]) {
+                    console.log("  " + category);
+                    for (let name in tree[mainCategory][category]) {
+                        console.log("    " + name);
+                        for (let actions of tree[mainCategory][category][name]) {
+                            console.log("      " + actions.join(', '));
+                        }
+                    }
+                }
+            }
+        } else {
+            console.log('this.childToSubChildMap is not an object');
         }
     }
+
+}
+
+    
+    // @wire(getPlanRelatedLists, { planId: '$recordId' })
+    // wiredResult({ error, data }) {
+    //     console.log('wiredResult');
+    //     if (data) {
+    //         console.log('HAS DATA getPlanRelatedLists');
+    //         this.childToSubChildMap = data;
+    //         console.log(this.childToSubChildMap);
+    
+    //         // Print object names and features
+    //         console.log('------------------------');
+
+    
+    //         for (let child of Object.keys(this.childToSubChildMap)) {
+    //             let childObject = child;
+    //             console.log('Child Objec: ' + childObject);
+    //             let Statement_Main_Catergory_match = childObject.match(/Statement_Main_Catergory__c:([^,]+)/);
+    //             if (Statement_Main_Catergory_match && Statement_Main_Catergory_match.length > 1) {
+    //                let main_category = Statement_Main_Catergory_match[1].trim();
+    //                console.log('statemet Block_main cat: ' + main_category);
+    //                this.main_category = main_category;
+
+
+    //             //    let mainCategoryTitleElement = document.getElementById("mainCategoryTitle");
+    //             //    if (mainCategoryTitleElement) {
+    //             //     mainCategoryTitleElement.textContent = main_category;
+    //             //   }
+    //             }
+    //             let Statement_Category_match = childObject.match(/Statement_Category__c:([^,]+)/);
+    //              if (Statement_Category_match && Statement_Category_match.length > 1) {
+    //                 let category = Statement_Category_match[1].trim();
+    //                 console.log('statement Block_category: ' + category);
+    //                 this.sub_category = category;
+
+    //              }
+    //             let nameMatch = childObject.match(/Name:([^,]+)/);
+    //             if (nameMatch && nameMatch.length > 1) {
+    //                let name = nameMatch[1].trim();
+    //                console.log('statement Block_name: ' + name);
+    //                this.name = name;
+    //             }
+    
+    //             // Actions
+    //             let subChildList = this.childToSubChildMap[child];
+    //             for (let subChild of subChildList) {
+    //                 console.log('Action list element: ' + subChild.Action__c);
+    //             }
+    //         }
+    
+    //         console.log('------------------------');
+    //     } else if (error) {
+    //         console.log('ERROR getPlanRelatedLists');
+    //         this.errorx = error;
+    //     }
+    // }
     
     
     
