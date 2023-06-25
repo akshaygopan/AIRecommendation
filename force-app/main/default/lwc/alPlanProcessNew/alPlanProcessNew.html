@@ -12,7 +12,7 @@
      <p>No data to display.</p>
    </template>   -->
 
-    <div class="slds-box" if:true={recommendations}>
+    <!-- <div class="slds-box" if:true={recommendations}>
         <p>Has Data</p>
         <table class="slds-table">
             <tbody for:each={currentPlanRelatedLists} for:item="pro" key={pro.key}>
@@ -24,6 +24,16 @@
                 </tr>
             </tbody>
         </table>
+    </div> -->
+
+    <div>
+        <!-- Other HTML markup and components -->
+        <button onclick={handleCheckboxClick}>Click Me to update checkbox</button>
+    </div>
+
+    <div>
+        <!-- Other HTML markup and components -->
+        <button onclick={handleOtherActionSelection}>Click Me to save other Action</button>
     </div>
 
     <!-- <table>
@@ -145,7 +155,7 @@
         </table>          -->
 
         
-        <div class="outermost-box">
+        <!-- <div class="outermost-box">
             <div class="title-rectangle">
               <span class="title">Transport and Mobility</span>
             </div>
@@ -205,7 +215,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           
 
     </lightning-card>
