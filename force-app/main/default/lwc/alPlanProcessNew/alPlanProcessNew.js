@@ -104,6 +104,7 @@ export default class AlPlanProcessNew extends LightningElement {
     }
 
 
+    /* ------ NEW METHODS ----- */
 
     //handleCheckboxClick() - to update db on checkbox click
     //actionRecordId : Provide the appropriate Recommended Action object - Id field
