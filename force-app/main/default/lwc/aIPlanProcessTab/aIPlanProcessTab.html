@@ -1,101 +1,79 @@
 <template>
-    <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
-       
-        <div class="outermost-box">
-            <div class="title-rectangle">
-              <span class="title">{main_category}</span>
-            </div>
-            <div class="outer-box">
-              <div class="title-box">
-                {sub_category}
-              </div>
-              <div class="container">
-                <div class="left-container">
-                  <div class="top-box">
-                    <p class="green-paragraph">
-                      {name}
-                    </p>
-                  </div>
-                  <div class="middle-container">
-                    <div class="middle-left-box">
-                      <input type="checkbox" id="checkbox1" class="input_checkbox">
-                      <label for="checkbox1" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox2" class="input_checkbox">
-                      <label for="checkbox2" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox3" class="input_checkbox">
-                      <label for="checkbox3" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox4" class="input_checkbox">
-                      <label for="checkbox4" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox5" class="input_checkbox">
-                      <label for="checkbox5" class="checkbox_label"></label>
-                    </div>
-                    <div class="inner-box">
-                      <ul>
-                        <li class="list_item">
-                          <label for="checkbox1" class="checkbox_label">Apply for Affordable Bus Pass</label>
-                        </li>
-                        <li class="list_item">
-                          <label for="checkbox2" class="checkbox_label">Apply for an Ontario Driver's License</label>
-                        </li>
-                        <li class="list_item">
-                          <label for="checkbox3" class="checkbox_label">Get a map of the city and a bus schedule-app?</label>
-                        </li>
-                        <li class="list_item">
-                          <label for="checkbox4" class="checkbox_label">Learn about public transportation options</label>
-                        </li>
-                      </ul>
-                      <div>
-                        <input type="text" class="input_text" placeholder="Other">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="left-container">
-                  <div class="top-box">
-                    <p class="green-paragraph">
-                      I walk to get around
-                    </p>
-                  </div>
-                  <div class="middle-container">
-                    <div class="middle-left-box">
-                      <input type="checkbox" id="checkbox6" class="input_checkbox">
-                      <label for="checkbox6" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox7" class="input_checkbox">
-                      <label for="checkbox7" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox8" class="input_checkbox">
-                      <label for="checkbox8" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox9" class="input_checkbox">
-                      <label for="checkbox9" class="checkbox_label"></label>
-                      <input type="checkbox" id="checkbox10" class="input_checkbox">
-                      <label for="checkbox10" class="checkbox_label"></label>
-                    </div>
-                    <div class="inner-box">
-                      <ul>
-                        <li class="list_item">
-                          <label for="checkbox6" class="checkbox_label">Find a local Driving School</label>
-                        </li>
-                        <li class="list_item">
-                          <label for="checkbox7" class="checkbox_label">Apply for Affordable Bus Pass Program</label>
-                        </li>
-                        <li class="list_item">
-                          <label for="checkbox8" class="checkbox_label">Learn more about alternative transport, car rental</label>
-                        </li>
-                        <li class="list_item">
-                          <label for="checkbox9" class="checkbox_label">Attend G1 information session</label>
-                        </li>
-                      </ul>
-                      <div>
-                        <input type="text" class="input_text" placeholder="Other">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
+    <template for:each={info} for:item="item">
+      <div class="main_cat_box" key={item.label}>
+        
+        <div class="title-rectangle">
+          <span class="title">{item.label}</span>
+        </div>
+        <template for:each={item.innerData} for:item="innerItem">
+        <div class="cat_box" key={innerItem.label}>
+          <div class="title-box">
+            {innerItem.label}
           </div>
-          
-          
+          <div class="container">
+            <template for:each={innerItem.innerInnerData} for:item="innerInnerItem">
+            <div class="statement_block" key={innerInnerItem.label}>
+              <div class="top-box">
+                <p class="green-paragraph">
+                  {innerInnerItem.label}
+                </p>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <div>
+                  <p style="margin-left: 45px; background: #F0F5F1; padding:5px; font-weight: bold; font-size:14px; border-left: 2px solid #4C9EC4; border-top: 2px solid #4C9EC4; border-right:2px solid #4C9EC4">Actions</p>
+                </div>
+                <div class="middle-container">
+                  <div class = 'checkboxes'>
+                    <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
+                      <input class = 'checkboxe' type="checkbox"  key={innerInnerInnerItem.label}>
+                    </template>
+                  </div>
+               
+  
+                <div class = 'actions'>
+                <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
+                  <label class= "action" key={innerInnerInnerItem.label}>{innerInnerInnerItem.label}</label>
+                  <!-- <div key={innerInnerInnerItem.label}></div> -->
+                </template>
+               </div>
+                </div>
+              </div>
 
-    </lightning-card>
-    
+
+              <div class= "other">
+                <input type="checkbox" class="checkboxe" >
+                <input type="text" class="input_text" placeholder="Other">
+              </div>
+            </div>
+          </template>
+          </div>
+        </div>
+      </template>
+
+      </div>
+
+    </template>
+
+  </lightning-card>
 </template>
+
+
+<!-- <template>
+  <div>
+    <ul>
+      <template for:each={info} for:item="item">
+        <li key={item.label}>Main: {item.label}</li>
+        <template for:each={item.innerData} for:item="innerItem">
+          <li key={innerItem.label}>SubMain: {innerItem.label}</li>
+          <template for:each={innerItem.innerInnerData} for:item="innerInnerItem">
+            <li key={innerInnerItem.label}>Name: {innerInnerItem.label}</li>
+            <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
+              <li key={innerInnerInnerItem.label}>Action: {innerInnerInnerItem.label}</li>
+            </template>
+          </template>
+        </template>
+      </template>
+    </ul>
+  </div>
+</template> --> 

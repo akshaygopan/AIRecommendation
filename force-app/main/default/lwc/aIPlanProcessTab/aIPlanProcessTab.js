@@ -174,6 +174,8 @@ export default class AIPlanProcessTab extends LightningElement {
     @track main_category;
     @track sub_category;
     @track name;
+    @track info = [];
+    @track mainCategoryData = {};
 
     @wire(getPlanRelatedLists, { planId: '$recordId' })
 wiredResult({ error, data }) {
@@ -225,12 +227,46 @@ wiredResult({ error, data }) {
                 }
             }
 
+            let tempInfo = [];
+for (let mainCategory in tree) {
+let mainCategoryItem = {
+    label: mainCategory,
+    innerData: []
+    };
+    for (let category in tree[mainCategory]) {
+        let categoryItem = {
+            label: category,
+            innerInnerData: []
+        };
+        for (let name in tree[mainCategory][category]) {
+            let nameItem = {
+                label: name,
+                innerInnerInnerData: []
+            };
+            for (let actions of tree[mainCategory][category][name]) {
+                for (let action of actions) {
+                    nameItem.innerInnerInnerData.push({ label: action });
+                }
+            }
+            categoryItem.innerInnerData.push(nameItem);
+        }
+        mainCategoryItem.innerData.push(categoryItem);
+    }
+    tempInfo.push(mainCategoryItem);
+}
+this.info = tempInfo;
+
             for (let mainCategory in tree) {
                 console.log(mainCategory);
+                let categories = tree[mainCategory];
+                this.mainCategoryData[mainCategory] = categories;
+                this.main_category = mainCategory;
                 for (let category in tree[mainCategory]) {
                     console.log("  " + category);
+                    this.sub_category = category;
                     for (let name in tree[mainCategory][category]) {
                         console.log("    " + name);
+                        this.name = name;
                         for (let actions of tree[mainCategory][category][name]) {
                             console.log("      " + actions.join(', '));
                         }
@@ -244,7 +280,7 @@ wiredResult({ error, data }) {
 
 }
 
-    
+
     // @wire(getPlanRelatedLists, { planId: '$recordId' })
     // wiredResult({ error, data }) {
     //     console.log('wiredResult');
