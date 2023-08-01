@@ -11,7 +11,7 @@ public with sharing class PlanRelatedListHandler {
 
         Map<Auto_Recomandation__c, List<Recommended_Action__c>> childToSubChildMap = new Map<Auto_Recomandation__c, List<Recommended_Action__c>>();
 
-        List<Auto_Recomandation__c> childRecords = [SELECT Id,Name,Statement_Category__c, Statement_Main_Catergory__c, Status__c, (SELECT Id, Name, Action__c, Other_Data__c, Chosen__c FROM Recommended_Actions__r) FROM Auto_Recomandation__c WHERE Auto_Settlement_Plan__c = :planId];
+        List<Auto_Recomandation__c> childRecords = [SELECT Id,Name,Statement_Category__c, Statement_Main_Catergory__c, Status__c, (SELECT Id, Name, Action__c, Other_Data__c, Chosen__c, isSelected__c FROM Recommended_Actions__r) FROM Auto_Recomandation__c WHERE Auto_Settlement_Plan__c = :planId];
 
         for (Auto_Recomandation__c child : childRecords) 
         {
@@ -90,7 +90,9 @@ public with sharing class PlanRelatedListHandler {
 
     @AuraEnabled(cacheable=true)
     public static List<ymcaswo_k2__Action__c> getOtherActionList(String category, String indicator){
-        List<ymcaswo_k2__Action__c> actionList = [SELECT Name, ymcaswo_k2__Action__c, ymcaswo_k2__Assessment_Category__c,ymcaswo_k2__Assessment_Indicator__c FROM ymcaswo_k2__Action__c WHERE ymcaswo_k2__Assessment_Category__c = :category AND ymcaswo_k2__Assessment_Indicator__c = :indicator];
+        List<ymcaswo_k2__Action__c> actionList = [SELECT Name, ymcaswo_k2__Action__c, ymcaswo_k2__Assessment_Category__c,ymcaswo_k2__Assessment_Indicator__c FROM ymcaswo_k2__Action__c WHERE 
+                                                  (ymcaswo_k2__Assessment_Category__c = :category AND ymcaswo_k2__Assessment_Indicator__c = :indicator) OR
+                                                 (ymcaswo_k2__Assessment_Category__c = :category AND ymcaswo_k2__Assessment_Indicator__c = null)];
         
         // for (ymcaswo_k2__Action__c action : actionList) 
         // {
@@ -111,6 +113,8 @@ public with sharing class PlanRelatedListHandler {
         return actionList;
 
     }
+
+
 
     @AuraEnabled
     public static void setOtherAction (String ActionRecordId, String otherAction){
