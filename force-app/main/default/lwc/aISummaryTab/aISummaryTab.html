@@ -1,0 +1,79 @@
+<template>
+  <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
+    <template for:each={info} for:item="item">
+      <div class="main_cat_box" key={item.label}>
+        
+        <div class="title-rectangle">
+          <span class="title">{item.label}</span>
+        </div>
+        <template for:each={item.innerData} for:item="innerItem">
+        <div class="cat_box" key={innerItem.label}>
+          <div class="title-box">
+            {innerItem.label}
+          </div>
+          <div class="container">
+            <template for:each={innerItem.innerInnerData} for:item="innerInnerItem">
+            <div class="statement_block" key={innerInnerItem.label}>
+              <div class="top-box">
+                <p class="green-paragraph">
+                  {innerInnerItem.label}
+                </p>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <div>
+                  <p style="margin-left: 45px; background: #F0F5F1; padding:5px; font-weight: bold; font-size:14px; border-left: 2px solid #4C9EC4; border-top: 2px solid #4C9EC4; border-right:2px solid #4C9EC4">Actions</p>
+                </div>
+                <div class="middle-container">
+                  <div class='checkboxes'>
+                      <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
+                          <div key={innerInnerInnerItem.label}>
+                              <input class='checkboxe' type="checkbox" 
+                                  checked={innerInnerInnerItem.checked} 
+                                  data-id={innerInnerInnerItem.id}
+                                  onchange={handleChange}>
+                              <label class="action">{innerInnerInnerItem.label}</label>
+                          </div>
+                      </template>
+                  </div>
+              </div>
+              
+              
+              </div>
+
+
+              <div class= "other">
+                <input type="checkbox" class="checkboxe" >
+                <input type="text" class="input_text" placeholder="Other">
+              </div>
+            </div>
+          </template>
+          </div>
+        </div>
+      </template>
+
+      </div>
+
+    </template>
+
+  </lightning-card>
+</template>
+
+
+<!-- <template>
+  <div>
+    <ul>
+      <template for:each={info} for:item="item">
+        <li key={item.label}>Main: {item.label}</li>
+        <template for:each={item.innerData} for:item="innerItem">
+          <li key={innerItem.label}>SubMain: {innerItem.label}</li>
+          <template for:each={innerItem.innerInnerData} for:item="innerInnerItem">
+            <li key={innerInnerItem.label}>Name: {innerInnerItem.label}</li>
+            <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
+              <li key={innerInnerInnerItem.label}>Action: {innerInnerInnerItem.label}</li>
+            </template>
+          </template>
+        </template>
+      </template>
+    </ul>
+  </div>
+</template> --> 
