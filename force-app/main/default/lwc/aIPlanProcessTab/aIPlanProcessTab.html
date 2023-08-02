@@ -24,20 +24,20 @@
                   <p style="margin-left: 45px; background: #F0F5F1; padding:5px; font-weight: bold; font-size:14px; border-left: 2px solid #4C9EC4; border-top: 2px solid #4C9EC4; border-right:2px solid #4C9EC4">Actions</p>
                 </div>
                 <div class="middle-container">
-                  <div class = 'checkboxes'>
-                    <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
-                      <input class = 'checkboxe' type="checkbox"  key={innerInnerInnerItem.label}>
-                    </template>
+                  <div class='checkboxes'>
+                      <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
+                          <div key={innerInnerInnerItem.label}>
+                              <input class='checkboxe' type="checkbox" 
+                                  checked={innerInnerInnerItem.checked} 
+                                  data-id={innerInnerInnerItem.id}
+                                  onchange={handleChange}>
+                              <label class="action">{innerInnerInnerItem.label}</label>
+                          </div>
+                      </template>
                   </div>
-               
-  
-                <div class = 'actions'>
-                <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
-                  <label class= "action" key={innerInnerInnerItem.label}>{innerInnerInnerItem.label}</label>
-                  <!-- <div key={innerInnerInnerItem.label}></div> -->
-                </template>
-               </div>
-                </div>
+              </div>
+              
+              
               </div>
 
 

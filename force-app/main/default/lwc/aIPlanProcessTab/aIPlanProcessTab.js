@@ -23,6 +23,7 @@ import ACTION_OBJECT from '@salesforce/schema/Recommended_Action__c';
 import ACTION_FEILD_ID from '@salesforce/schema/Recommended_Action__c.Action_ID__c';
 import ACTION_FEILD_NAME from '@salesforce/schema/Recommended_Action__c.Name';
 import ACTION_FEILD_RECORD_ID from '@salesforce/schema/Recommended_Action__c.Id';
+import setActionIsSelected from '@salesforce/apex/PlanRelatedListHandler.setActionIsSelected';
 
 export default class AIPlanProcessTab extends LightningElement {
 
@@ -181,6 +182,7 @@ export default class AIPlanProcessTab extends LightningElement {
 wiredResult({ error, data }) {
     console.log('wiredResult');
     if (data) {
+        console.log(data);
         console.log('HAS DATA getPlanRelatedLists');
         this.childToSubChildMap = data;
 
@@ -210,7 +212,8 @@ wiredResult({ error, data }) {
                 }
                 let actionObjects = this.childToSubChildMap[child];
                 for (let actionObject of actionObjects) {
-                    actions.push(actionObject.Action__c);
+                    debugger;
+                    actions.push({label: actionObject.Action__c, id: actionObject.Id, checked:actionObject.isSelected__c});
                 }
 
                 if (mainCategory && category && name && actions.length > 0) {
@@ -245,7 +248,12 @@ let mainCategoryItem = {
             };
             for (let actions of tree[mainCategory][category][name]) {
                 for (let action of actions) {
-                    nameItem.innerInnerInnerData.push({ label: action });
+                    debugger;
+                    nameItem.innerInnerInnerData.push({ 
+                        label: action.label, 
+                        id: action.id,
+                        checked: action.checked 
+                    });
                 }
             }
             categoryItem.innerInnerData.push(nameItem);
@@ -279,6 +287,48 @@ this.info = tempInfo;
     }
 
 }
+
+// handleChange(event) {
+//     let checkboxValue = event.target.checked;
+//     let checkboxLabel = event.target.dataset.label;
+//     alert(`Value: ${checkboxValue}, Label: ${checkboxLabel}`);
+// }
+
+
+handleChange(event) {
+    let checkboxValue = event.target.checked ? 1 : 0; // Convert to integer
+    let recordId = event.target.dataset.id;
+    debugger;
+    console.log(recordId);
+
+
+    setActionIsSelected({ActionRecordId: recordId, isSelected: checkboxValue})
+        .then(result => {
+            alert(`Record updated successfully.`);
+        })
+        .catch(error => {
+            debugger;
+            console.log('Error updating record: ' + error);
+            alert('Error updating record: ' + error);
+        });
+}
+
+
+// handleChange(event) {
+//     let checkboxValue = event.target.checked;
+//     let recordId = event.target.dataset.recordid;
+//     let checkboxLabel = event.target.dataset.label;
+
+//     setActionIsSelected({ActionRecordId: recordId, isSelected: checkboxValue})
+//         .then(result => {
+//             alert(`Record updated successfully.`);
+//         })
+//         .catch(error => {
+//             debugger;
+//             console.log('Error updating record: ' + error);
+//             alert('Error updating record: ' + error);
+//         });
+// }
 
 
     // @wire(getPlanRelatedLists, { planId: '$recordId' })
