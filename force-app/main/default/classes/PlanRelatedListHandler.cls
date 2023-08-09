@@ -11,7 +11,7 @@ public with sharing class PlanRelatedListHandler {
 
         Map<Auto_Recomandation__c, List<Recommended_Action__c>> childToSubChildMap = new Map<Auto_Recomandation__c, List<Recommended_Action__c>>();
 
-        List<Auto_Recomandation__c> childRecords = [SELECT Id,Name,Statement_Category__c, Statement_Main_Catergory__c, Status__c, (SELECT Id, Name, Action__c, Other_Data__c, Chosen__c, isSelected__c FROM Recommended_Actions__r) FROM Auto_Recomandation__c WHERE Auto_Settlement_Plan__c = :planId];
+        List<Auto_Recomandation__c> childRecords = [SELECT Id,Name,Statement_Category__c, Statement_Main_Catergory__c, Status__c, (SELECT Id, Name, Action__c, Other_Data__c, Chosen__c, isSelected__c, Order__c FROM Recommended_Actions__r ORDER BY Order__c) FROM Auto_Recomandation__c WHERE Auto_Settlement_Plan__c = :planId];
 
         for (Auto_Recomandation__c child : childRecords) 
         {
@@ -120,9 +120,12 @@ public with sharing class PlanRelatedListHandler {
     public static void setOtherAction (String ActionRecordId, String otherAction){
         //System.debug('ActionRecordId - '+ActionRecordId);
         //System.debug('otherAction - '+otherAction);
-        Recommended_Action__c recAction = [SELECT Id, Name, Other_Data__c FROM Recommended_Action__c WHERE Id = :ActionRecordId  LIMIT 1];
+        Recommended_Action__c recAction = [SELECT Id, Name, Action__c, Other_Data__c FROM Recommended_Action__c WHERE Id = :ActionRecordId  LIMIT 1];
         //System.debug('recAction - '+recAction);
-        recAction.Other_Data__c = otherAction;
+        recAction.Action__c = otherAction;
+
+        System.debug('Other updated: ' + recAction.Action__c);
+        
         update recAction;
     }
 
@@ -135,7 +138,7 @@ public with sharing class PlanRelatedListHandler {
         Map<Auto_Recomandation__c, List<Recommended_Action__c>> childToSubChildMap = new Map<Auto_Recomandation__c, List<Recommended_Action__c>>();
 
         List<Auto_Recomandation__c> childRecords = [SELECT Id,Name,Statement_Category__c, Statement_Main_Catergory__c, Status__c, 
-        (SELECT Id, Name, Action__c, Other_Data__c, Chosen__c FROM Recommended_Actions__r WHERE isSelected__c = 1) 
+        (SELECT Id, Name, Action__c, Other_Data__c, Chosen__c, Order__c FROM Recommended_Actions__r WHERE isSelected__c = 1 ORDER BY Order__c) 
         FROM Auto_Recomandation__c WHERE Auto_Settlement_Plan__c = :planId];
 
         for (Auto_Recomandation__c child : childRecords) 

@@ -150,13 +150,13 @@ export default class AlPlanProcessNew extends LightningElement {
 
 
     //handleOtherActionSelection() - to update db on other action selection
-    //ActionRecordId : Provide the appropriate Recommended Action object - Id field
+    //ActionRecordId : Provide the appropriate Recommended Action object - Id field (Recommended_Action__c.Id)
     //otherAction : Provide the appropriate other action value (from dropdown)
-    //otherAction is saved on field - Recommended_Action__c.Other_Action__c
+    //otherAction is saved on field - Recommended_Action__c.Action__c
 
 
     handleOtherActionSelection() {
-        setOtherAction({ ActionRecordId: 'a35Aw00000009phIAA', otherAction: 'Test saving other action' })
+        setOtherAction({ ActionRecordId: 'a35Aw00000009phIAA', otherAction: 'Other - Test saving other action' })
             .then(() => {
                 // Update successful
                 console.log('otherAction updated to successfully!!');
