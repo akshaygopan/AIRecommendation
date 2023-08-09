@@ -122,11 +122,21 @@ public with sharing class PlanRelatedListHandler {
         //System.debug('otherAction - '+otherAction);
         Recommended_Action__c recAction = [SELECT Id, Name, Action__c, Other_Data__c FROM Recommended_Action__c WHERE Id = :ActionRecordId  LIMIT 1];
         //System.debug('recAction - '+recAction);
-        recAction.Action__c = otherAction;
+        // recAction.Action__c = otherAction;
 
-        System.debug('Other updated: ' + recAction.Action__c);
+        // System.debug('Other updated: ' + recAction.Action__c);
         
-        update recAction;
+        // update recAction;
+
+        if (recAction != null && otherAction != null)  {
+            recAction.Action__c = 'Other - ' + otherAction;
+    
+            System.debug('Other updated: ' + recAction.Action__c);
+    
+            update recAction;
+        } else {
+            System.debug('No record found with the given Id: ' + ActionRecordId);
+        }
     }
 
 
