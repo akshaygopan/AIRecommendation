@@ -17,13 +17,14 @@ import AUTO_REC_FEILD_ID from '@salesforce/schema/Auto_Recomandation__c.Action_I
 import AUTO_REC_FEILD_NAME from '@salesforce/schema/Auto_Recomandation__c.Name';
 import AUTO_REC_FEILD_MAIN_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Main_Catergory__c';
 import AUTO_REC_FEILD_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Category__c';
-
+import setOtherAction from '@salesforce/apex/PlanRelatedListHandler.setOtherAction';
 
 import ACTION_OBJECT from '@salesforce/schema/Recommended_Action__c';
 import ACTION_FEILD_ID from '@salesforce/schema/Recommended_Action__c.Action_ID__c';
 import ACTION_FEILD_NAME from '@salesforce/schema/Recommended_Action__c.Name';
 import ACTION_FEILD_RECORD_ID from '@salesforce/schema/Recommended_Action__c.Id';
 import setActionIsSelected from '@salesforce/apex/PlanRelatedListHandler.setActionIsSelected';
+import getOtherActionList from '@salesforce/apex/PlanRelatedListHandler.getOtherActionList';
 
 export default class AIPlanProcessTab extends LightningElement {
 
@@ -61,6 +62,220 @@ export default class AIPlanProcessTab extends LightningElement {
     }
 
 
+    
+    category = 'Employment';
+    indicator = 'Skills';
+
+    @track otherActions;
+    @track error;
+    @wire(getOtherActionList, { category: '$category', indicator:'$indicator'})
+    wiredResult2({ error, data }) {
+        console.log('wiredResult1');
+        if (data) {
+            console.log('HAS DATA Other Actions');
+         
+            this.otherActions = data;
+            console.log(this.otherActions);
+
+        } else if (error) {
+            console.log('ERROR Other Actions');
+            this.errorx = error;
+        }
+    }
+
+    // @track otherActions = [];
+    // @track selectedAction;
+
+    // columns = [
+    //     { label: 'Action Name', fieldName: 'ymcaswo_k2__Action__c', type: 'text' },
+    //     {
+    //         type: 'button', label: 'Select', initialWidth: 135,
+    //         typeAttributes: {
+    //             label: 'Select',
+    //             name: 'select_action',
+    //             title: 'Click to select this action',
+    //             disabled: false,
+    //             value: 'select',
+    //             iconName: 'utility:check',
+    //             variant: 'border-filled',
+    //         }
+    //     }
+    // ];
+
+    @track otherActions = [];
+    @track otherActionsOptions = [];
+    @track selectedAction;
+    // You might need to declare item and inner if they're not declared elsewhere
+    item;
+    inner;
+
+    handleMenuFocus(event) {
+        // Fetch the data for the combobox
+        this.item = event.target.dataset.item;
+        console.log(`Selected value is: ${this.item}`);
+        this.inner = event.target.dataset.inner;
+        console.log(`Selected value is: ${this.inner}`);
+        console.log('STAAAAAAAAAAAAAAARRRRRRRRRRRRRTTTT');
+        getOtherActionList({ category: this.item, indicator: this.inner })
+            .then(data => {
+                this.otherActions = data;
+                this.otherActionsOptions = this.otherActions.map(action => {
+                    return {
+                        label: action.ymcaswo_k2__Action__c,
+                        value: action.ymcaswo_k2__Action__c  // Adjust based on your data structure
+                    };
+                });
+                console.log(this.otherActionsOptions);
+                console.log(this.otherActions);
+                this.hasLoadedData = true;
+            })
+            .catch(error => {
+                console.log('BUGGGGGGGGGGGGG');
+                console.log('ERROR Other Actions:', error);
+                this.error = error;
+            });
+    }
+    
+    handleSelect(event) {
+        this.selectedAction = event.detail.value;
+        console.log(this.selectedAction);
+        // Do further processing if needed
+    }
+
+    @track selectedValues = [];
+
+    handleSelect(event) {
+        const uniqueId = event.target.dataset.id;
+        this.selectedValues[uniqueId] = event.detail.value;
+        console.log(event.detail.value);
+        console.log(this.treees);
+        const mainCategorys = event.target.dataset.item;
+        const categorys = event.target.dataset.inner;
+        const subCategorys = event.target.dataset.subs;
+        for (let mainCategory in this.treees) {
+            if(mainCategory == mainCategorys){            
+                for (let category in this.treees[mainCategory]) {
+                    if(category == categorys){
+                    for (let name in this.treees[mainCategory][category]) {
+                        if(name == subCategorys){
+                        for (let actions of this.treees[mainCategory][category][name]) {
+                            for (let action of actions) {
+                                if(action.label.startsWith('Other')){
+                                    console.log(action.label);
+                                    console.log(action.id);
+                                    setOtherAction({ ActionRecordId: action.id, otherAction: event.detail.value})
+            .then(() => {
+                // Update successful
+                console.log('otherAction updated to successfully!!');
+            }
+            )   
+            .catch(error => {
+                // Error occurred
+                console.error(error);
+                console.log('otherAction update failed!');
+            }
+            );
+                                }
+                            }
+                        }
+                    }
+                }
+                }
+            }
+            }
+        }
+    }
+
+    // handleMenuFocus(event) {
+    //     // Fetch the data for the menu
+    //     this.item = event.target.dataset.item;
+    //     console.log(`Selected value is: ${this.item}`);
+    //     this.inner = event.target.dataset.inner;
+    //     console.log(`Selected value is: ${this.inner}`);
+    //     console.log('STAAAAAAAAAAAAAAARRRRRRRRRRRRRTTTT');
+    //     getOtherActionList({ category: this.item, indicator: this.inner })
+    //         .then(data => {
+    //             this.otherActions = data;
+    //             this.otherActionsOptions = this.otherActions.map(action => {
+    //                 return {
+    //                     label: action.Id,
+    //                     value: action.ymcaswo_k2__Action__c  // Adjust based on your data structure
+    //                 };
+    //             });
+    //             console.log(getOtherActionList);
+    //             console.log(this.otherActionsOptions);
+    //             console.log(this.otherActions);
+    //             this.hasLoadedData = true;
+    //         })
+    //         .catch(error => {
+    //             console.log('BUGGGGGGGGGGGGG');
+    //             console.log('ERROR Other Actions:', error);
+    //             this.error = error;
+    //         });
+    // }
+    
+    // @track otherActions = [];
+    // @track selectedAction;
+    // handleSelect(event) {
+    //     debugger;
+    //     this.selectedAction = event.detail.value;
+    //     console.log(this.selectedAction);
+    //     // Do further processing if needed
+    // }
+
+    // @track hasLoadedData = false;
+    // handleMouseOver(event) {
+    //     // Only fetch data if it hasn't been fetched before
+    //     this.item = event.target.dataset.item;
+    //     console.log(`Selected value is: ${this.item}`);
+    //     this.inner = event.target.dataset.inner;
+    //     console.log(`Selected value is: ${this.inner}`);
+    //     // Only fetch data if it hasn't been fetched before
+    //     // if (!this.hasLoadedData) {
+    //         console.log('STAAAAAAAAAAAAAAARRRRRRRRRRRRRTTTT');
+    //         getOtherActionList({ category: this.item, indicator: this.inner })
+    //         .then(data => {
+    //             this.otherActions = data;
+    //             this.otherActionsOptions = this.otherActions.map(action => {
+    //                 return {
+    //                     label: action.Id,
+    //                     value: action.ymcaswo_k2__Action__c  // Adjust based on your data structure
+    //                 };
+    //             });
+    //             console.log(getOtherActionList);
+    //             console.log(this.otherActionsOptions);
+    //             console.log(this.otherActions);
+    //             this.hasLoadedData = true;
+    //         })
+    //         .catch(error => {
+    //             console.log('BUGGGGGGGGGGGGG');
+    //             console.log('ERROR Other Actions:', error);
+    //             this.error = error;
+    //         });
+    //     // }
+    // }
+
+    // @track hasLoadedData = false;
+    // handleMouseOver(event) {
+    //     // Only fetch data if it hasn't been fetched before
+    //     if (!this.hasLoadedData) {
+    //         getOtherActionList({ category: this.category, indicator: this.indicator })
+    //         .then(data => {
+    //             this.otherActions = data;
+    //             this.otherActionsOptions = this.otherActions.map(action => {
+    //                 return {
+    //                     label: action.label,
+    //                     value: action.label  // Adjust based on your data structure
+    //                 };
+    //             });
+    //             this.hasLoadedData = true;
+    //         })
+    //         .catch(error => {
+    //             console.log('ERROR Other Actions:', error);
+    //             this.error = error;
+    //         });
+    //     }
+    // }
 
 
     get autoRecFieldMainCategory() {
@@ -177,11 +392,13 @@ export default class AIPlanProcessTab extends LightningElement {
     @track name;
     @track info = [];
     @track mainCategoryData = {};
+    @track treees;
 
     @wire(getPlanRelatedLists, { planId: '$recordId' })
 wiredResult({ error, data }) {
     console.log('wiredResult');
     if (data) {
+        debugger;
         console.log(data);
         console.log('HAS DATA getPlanRelatedLists');
         this.childToSubChildMap = data;
@@ -230,6 +447,7 @@ wiredResult({ error, data }) {
                 }
             }
 
+            this.treees=tree;
             let tempInfo = [];
 for (let mainCategory in tree) {
 let mainCategoryItem = {
@@ -312,6 +530,52 @@ handleChange(event) {
             alert('Error updating record: ' + error);
         });
 }
+
+// Add these properties to your existing JavaScript code
+@track value = '';  // Holds the selected combobox value
+
+// Dummy options for the combobox
+@track options = [
+    { label: 'First', value: 'first' },
+    { label: 'Second', value: 'second' },
+    { label: 'Third', value: 'third' },
+    { label: 'Fourth', value: 'fourth' },
+    { label: 'Fifth', value: 'fifth' }
+];
+
+// handleComboboxChange(event) {
+//     this.value = event.detail.value;
+//     // Implement any logic here when the combobox value changes
+// }
+
+@track selectedValue = 'Rand1';
+@track selectedinner = '101'; // You can set a default value or leave it undefined
+
+handleComboboxChange(event) {
+    this.selectedValue = event.detail.value;
+    console.log(`Selected value is: ${event.detail.value}`);
+    this.selectedinner = event.target.dataset.id;
+    console.log(`Selected value is: ${this.selectedinner}`);
+}
+
+
+
+// previousChecked = null;
+
+//  toggleDropdown() {
+//         const dropdown = document.getElementById('dropdownContent');
+//         dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+// }
+
+// selectOption(element) {
+//         if (previousChecked && previousChecked !== element) {
+//             previousChecked.checked = false;
+//         }
+
+//         previousChecked = element;
+
+//         alert(element.value);
+// }
 
 
 // handleChange(event) {

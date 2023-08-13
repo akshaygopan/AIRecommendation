@@ -1,3 +1,52 @@
+.hidden-combo-box {
+  display: none;
+}
+
+.input-arrow-container {
+  display: flex;
+  align-items: center;
+}
+
+.arrow-icon {
+  cursor: pointer;
+  transition: transform 0.3s;
+  margin-top: 12px;
+  margin-left: 20px;
+}
+
+.combo-container {
+  font-family: 'Arial', sans-serif;
+  width: 200px;
+  position: relative;
+  margin: 20px;
+  border: 2px solid #007BFF;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  overflow: hidden;
+}
+
+.combo-container select {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+  background-color: #f8f9fa;
+  appearance: none; /* Removes default arrow in some browsers */
+  -webkit-appearance: none; /* Removes default arrow in webkit browsers */
+  -moz-appearance: none; /* Removes default arrow in Firefox */
+}
+
+.arrow-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 16px;
+  color: #007BFF;
+}
+
+
 .processBody {
   margin-bottom: 10px;
   text-align: center;
