@@ -112,10 +112,10 @@ export default class AIPlanProcessTab extends LightningElement {
     handleMenuFocus(event) {
         // Fetch the data for the combobox
         this.item = event.target.dataset.item;
-        console.log(`Selected value is: ${this.item}`);
+        // console.log(`Selected value is: ${this.item}`);
         this.inner = event.target.dataset.inner;
-        console.log(`Selected value is: ${this.inner}`);
-        console.log('STAAAAAAAAAAAAAAARRRRRRRRRRRRRTTTT');
+        // console.log(`Selected value is: ${this.inner}`);
+        // console.log('STAAAAAAAAAAAAAAARRRRRRRRRRRRRTTTT');
         getOtherActionList({ category: this.item, indicator: this.inner })
             .then(data => {
                 this.otherActions = data;
@@ -125,20 +125,20 @@ export default class AIPlanProcessTab extends LightningElement {
                         value: action.ymcaswo_k2__Action__c  // Adjust based on your data structure
                     };
                 });
-                console.log(this.otherActionsOptions);
-                console.log(this.otherActions);
+                // console.log(this.otherActionsOptions);
+                // console.log(this.otherActions);
                 this.hasLoadedData = true;
             })
             .catch(error => {
-                console.log('BUGGGGGGGGGGGGG');
-                console.log('ERROR Other Actions:', error);
+                // console.log('BUGGGGGGGGGGGGG');
+                // console.log('ERROR Other Actions:', error);
                 this.error = error;
             });
     }
     
     handleSelect(event) {
         this.selectedAction = event.detail.value;
-        console.log(this.selectedAction);
+        // console.log(this.selectedAction);
         // Do further processing if needed
     }
 
@@ -147,8 +147,8 @@ export default class AIPlanProcessTab extends LightningElement {
     handleSelect(event) {
         const uniqueId = event.target.dataset.id;
         this.selectedValues[uniqueId] = event.detail.value;
-        console.log(event.detail.value);
-        console.log(this.treees);
+        // console.log(event.detail.value);
+        // console.log(this.treees);
         const mainCategorys = event.target.dataset.item;
         const categorys = event.target.dataset.inner;
         const subCategorys = event.target.dataset.subs;
@@ -161,18 +161,18 @@ export default class AIPlanProcessTab extends LightningElement {
                         for (let actions of this.treees[mainCategory][category][name]) {
                             for (let action of actions) {
                                 if(action.label.startsWith('Other')){
-                                    console.log(action.label);
-                                    console.log(action.id);
+                                    // console.log(action.label);
+                                    // console.log(action.id);
                                     setOtherAction({ ActionRecordId: action.id, otherAction: event.detail.value})
             .then(() => {
                 // Update successful
-                console.log('otherAction updated to successfully!!');
+                // console.log('otherAction updated to successfully!!');
             }
             )   
             .catch(error => {
                 // Error occurred
                 console.error(error);
-                console.log('otherAction update failed!');
+                // console.log('otherAction update failed!');
             }
             );
                                 }
@@ -398,9 +398,9 @@ export default class AIPlanProcessTab extends LightningElement {
 wiredResult({ error, data }) {
     console.log('wiredResult');
     if (data) {
-        debugger;
-        console.log(data);
-        console.log('HAS DATA getPlanRelatedLists');
+        // debugger;
+        // console.log(data);
+        // console.log('HAS DATA getPlanRelatedLists');
         this.childToSubChildMap = data;
 
         console.log(this.childToSubChildMap);
@@ -553,7 +553,7 @@ handleChange(event) {
 
 handleComboboxChange(event) {
     this.selectedValue = event.detail.value;
-    console.log(`Selected value is: ${event.detail.value}`);
+    // console.log(`Selected value is: ${event.detail.value}`);
     this.selectedinner = event.target.dataset.id;
     console.log(`Selected value is: ${this.selectedinner}`);
 }
