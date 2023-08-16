@@ -1,0 +1,90 @@
+<template>
+  <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
+
+      <template for:each={info} for:item="item">
+          <div class="main_cat_box_1" key={item.label}>
+
+              <div class="title-rectangle">
+                  <span class="title">{item.label}</span>
+              </div>
+              <template for:each={item.innerData} for:item="innerItem">
+                  <div class="cat_box" key={innerItem.label}>
+                      <div class="title-box">
+                          {innerItem.label}
+                      </div>
+                      <div class="container">
+                          <template for:each={innerItem.innerInnerData} for:item="innerInnerItem">
+                              <div class="statement_block" key={innerInnerItem.label}>
+                                  <div class="top-box">
+                                      <p class="green-paragraph">
+                                          {innerInnerItem.label}
+                                      </p>
+                                  </div>
+                                  <div style="display: flex; flex-direction: column;">
+                                      <!-- <div>
+                                          <p style="margin-left: 45px; background: #F0F5F1; padding:5px; font-weight: bold; font-size:14px; border-left: 2px solid #4C9EC4; border-top: 2px solid #4C9EC4; border-right:2px solid #4C9EC4">Actions</p>
+                                      </div> -->
+                                      <div class="middle-container">
+                                          <div class='tick-bullets'>
+                                              <template for:each={innerInnerItem.innerInnerInnerData} for:item="innerInnerInnerItem">
+                                                  <div key={innerInnerInnerItem.label}>
+                                                    <span class="bullet">✔</span>
+                                                    <label class="action">{innerInnerInnerItem.label}</label>                                    
+                                                  </div>
+                                              </template>
+                                          </div>
+                                        
+                                      </div>
+                                      <!-- Adding combobox here -->
+                                      <!-- <lightning-combobox 
+    name="otherActions" 
+    label="Other Actions" 
+    key={innerInnerItem.someUniqueKey} 
+    data-id={index}
+    value={selectedAction}
+    data-item={item.label}
+    data-inner={innerItem.label}
+    data-subs={innerInnerItem.label}
+    options={otherActionsOptions} 
+    onchange={handleSelect} 
+    onfocus={handleMenuFocus} 
+    placeholder="Select an action">
+</lightning-combobox> -->
+                                      <!-- <lightning-button-menu alternative-text="Show actions" onselect={handleSelect}    data-item={item.label}
+                                      data-inner={innerItem.label} onfocus={handleMenuFocus}>
+                                        <template for:each={otherActions} for:item="action">
+                                            <lightning-menu-item key={action.Id} value={action.ymcaswo_k2__Action__c} label={action.ymcaswo_k2__Action__c}></lightning-menu-item>
+                                        </template>
+                                    </lightning-button-menu> -->
+                                    
+                                      <!-- <lightning-combobox
+    name="otherActions"
+    label="Other Actions"
+    value={selectedAction}
+    data-item={item.label}
+    data-inner={innerItem.label}
+    options={otherActionsOptions}
+    onchange={handleActionChange}
+    onmouseover={handleMouseOver}
+    dropdown-alignment="left"
+    placeholder="Select an action">
+</lightning-combobox> -->
+                                      <!-- <lightning-combobox 
+                                      name="progress"
+                                      label="Choose one"
+                                      value={value}
+                                      placeholder="Select Progress"
+                                      options={options}
+                                      data-id={innerItem.label}
+                                      onchange={handleComboboxChange}>
+                                  </lightning-combobox> -->
+                                  </div>                                
+                              </div>
+                          </template>
+                      </div>
+                  </div>
+              </template>
+          </div>
+      </template>
+  </lightning-card>
+</template>

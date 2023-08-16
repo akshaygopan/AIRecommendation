@@ -6,6 +6,7 @@ import { getRelatedListRecords, getRelatedListsInfo } from 'lightning/uiRelatedL
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 import getPlanRelatedLists from '@salesforce/apex/PlanRelatedListHandler.getPlanRelatedLists';
+import getPlanRelatedSummaryLists from '@salesforce/apex/PlanRelatedListHandler.getPlanRelatedSummaryLists';
 
 
 
@@ -394,7 +395,7 @@ export default class AIPlanProcessTab extends LightningElement {
     @track mainCategoryData = {};
     @track treees;
 
-    @wire(getPlanRelatedLists, { planId: '$recordId' })
+    @wire(getPlanRelatedSummaryLists, { planId: '$recordId' })
 wiredResult({ error, data }) {
     console.log('wiredResult');
     if (data) {
