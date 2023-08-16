@@ -1,3 +1,6 @@
+
+
+
 .hidden-combo-box {
   display: none;
 }
@@ -14,6 +17,15 @@
   margin-left: 20px;
 }
 
+.innerInnerData-container {
+  overflow: visible;
+}
+
+.myComboBox {
+  z-index: 1000; /* use a high value to ensure it appears on top */
+  position: relative; /* z-index only works on positioned elements */
+}
+
 .combo-container {
   font-family: 'Arial', sans-serif;
   width: 200px;
@@ -23,6 +35,8 @@
   border-radius: 5px;
   background-color: #f8f9fa;
   overflow: hidden;
+  z-index: 9999;
+  position: relative;
 }
 
 .combo-container select {
@@ -194,7 +208,7 @@
 }
 
 .cat_box {
-  overflow: auto;
+  overflow: visible;
   max-height: 100%;
 }
 
