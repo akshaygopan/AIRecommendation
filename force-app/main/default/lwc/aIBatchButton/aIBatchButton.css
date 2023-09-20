@@ -9,6 +9,8 @@
     margin: 10px 10px;
     transition-duration: 0.4s;
     cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 50px;
   }
   
   .button1 {

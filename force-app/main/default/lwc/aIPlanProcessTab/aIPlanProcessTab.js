@@ -17,14 +17,18 @@ import AUTO_REC_FEILD_ID from '@salesforce/schema/Auto_Recomandation__c.Action_I
 import AUTO_REC_FEILD_NAME from '@salesforce/schema/Auto_Recomandation__c.Name';
 import AUTO_REC_FEILD_MAIN_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Main_Catergory__c';
 import AUTO_REC_FEILD_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Category__c';
-import setOtherAction from '@salesforce/apex/PlanRelatedListHandler.setOtherAction';
+
 
 import ACTION_OBJECT from '@salesforce/schema/Recommended_Action__c';
 import ACTION_FEILD_ID from '@salesforce/schema/Recommended_Action__c.Action_ID__c';
 import ACTION_FEILD_NAME from '@salesforce/schema/Recommended_Action__c.Name';
 import ACTION_FEILD_RECORD_ID from '@salesforce/schema/Recommended_Action__c.Id';
+
 import setActionIsSelected from '@salesforce/apex/PlanRelatedListHandler.setActionIsSelected';
 import getOtherActionList from '@salesforce/apex/PlanRelatedListHandler.getOtherActionList';
+import setOtherAction from '@salesforce/apex/PlanRelatedListHandler.setOtherAction';
+import setOtherActionNew from '@salesforce/apex/PlanRelatedListHandler.setOtherActionNew';
+
 
 export default class AIPlanProcessTab extends LightningElement {
 

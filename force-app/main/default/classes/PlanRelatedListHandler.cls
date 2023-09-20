@@ -90,15 +90,33 @@ public with sharing class PlanRelatedListHandler {
 
     @AuraEnabled(cacheable=true)
     public static List<ymcaswo_k2__Action__c> getOtherActionList(String category, String indicator){
-        List<ymcaswo_k2__Action__c> actionList = [SELECT Name, ymcaswo_k2__Action__c, ymcaswo_k2__Assessment_Category__c,ymcaswo_k2__Assessment_Indicator__c FROM ymcaswo_k2__Action__c WHERE 
-                                                  (ymcaswo_k2__Assessment_Category__c = :category AND ymcaswo_k2__Assessment_Indicator__c = :indicator) OR
-                                                 (ymcaswo_k2__Assessment_Category__c = :category AND ymcaswo_k2__Assessment_Indicator__c = null)];
-        
+        // List<ymcaswo_k2__Action__c> actionList = [SELECT Name, ymcaswo_k2__Action__c, ymcaswo_k2__Assessment_Category__c,ymcaswo_k2__Assessment_Indicator__c FROM ymcaswo_k2__Action__c WHERE 
+        //                                           (ymcaswo_k2__Assessment_Category__c = :category AND ymcaswo_k2__Assessment_Indicator__c = :indicator) OR
+        //                                          (ymcaswo_k2__Assessment_Category__c = :category AND ymcaswo_k2__Assessment_Indicator__c = null)];
+
+        List<ymcaswo_k2__Action__c> actionList = [SELECT Name, ymcaswo_k2__Custom__c, ymcaswo_k2__Action__c, ymcaswo_k2__Assessment_Category__c,ymcaswo_k2__Assessment_Indicator__c, Import_ID__c FROM ymcaswo_k2__Action__c WHERE 
+                                                  (ymcaswo_k2__Custom__c = false AND ymcaswo_k2__Assessment_Category__c INCLUDES (:category) AND ymcaswo_k2__Assessment_Indicator__c INCLUDES (:indicator)) OR
+                                                 (ymcaswo_k2__Custom__c = false AND ymcaswo_k2__Assessment_Category__c INCLUDES (:category) AND ymcaswo_k2__Assessment_Indicator__c = null) ORDER BY ymcaswo_k2__Action__c];
+
         // for (ymcaswo_k2__Action__c action : actionList) 
         // {
         //     System.debug('Action Object: ' + action.Name);
         // }
-        return actionList;
+        //return actionList;
+
+        Set<String> uniqueActionNames = new Set<String>();
+        List<ymcaswo_k2__Action__c> uniqueActions = new List<ymcaswo_k2__Action__c>();
+    
+        for (ymcaswo_k2__Action__c action : actionList) {
+            if (!uniqueActionNames.contains(action.ymcaswo_k2__Action__c)) {
+                uniqueActionNames.add(action.ymcaswo_k2__Action__c);
+                uniqueActions.add(action);
+            }
+        }
+
+
+
+        return uniqueActions;
 
     }
 
@@ -138,6 +156,24 @@ public with sharing class PlanRelatedListHandler {
             System.debug('No record found with the given Id: ' + ActionRecordId);
         }
     }
+
+    @AuraEnabled
+    public static void setOtherActionNew (String ActionRecordId, String otherAction, String unquieId){
+        //System.debug('ActionRecordId - '+ActionRecordId);
+        //System.debug('otherAction - '+otherAction);
+        Recommended_Action__c recAction = [SELECT Id, Name, Action__c, Other_Data__c, Other_Unquie_ID__c FROM Recommended_Action__c WHERE Id = :ActionRecordId  LIMIT 1];
+
+        if (recAction != null && otherAction != null)  {
+            recAction.Action__c = 'Other - ' + otherAction;
+            recAction.Other_Unquie_ID__c = unquieId;
+    
+            System.debug('Other updated: ' + recAction.Action__c);
+    
+            update recAction;
+        } else {
+            System.debug('No record found with the given Id: ' + ActionRecordId);
+        }
+    }    
 
 
     @AuraEnabled(cacheable=true)
