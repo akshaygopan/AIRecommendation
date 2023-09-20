@@ -414,13 +414,18 @@ wiredResult({ error, data }) {
             let tree = {};
 
             for (let child in this.childToSubChildMap) {
+
+
                 console.log(child);
 
                 let mainCategory, category, name, actions = [];
 
-                let mainCategoryMatch = child.match(/Statement_Main_Catergory__c:([^,]+)/);
-                let categoryMatch = child.match(/Statement_Category__c:([^,]+)/);
-                let nameMatch = child.match(/Statement__c:([^,]+)/);
+
+                let mainCategoryMatch = child.match(/(?<=Statement_Main_Catergory__c:)(.*?)(?=, Status__c:)/);
+                let categoryMatch = child.match(/(?<=Statement_Category__c:)(.*?)(?=, Statement_Main_Catergory__c:)/);
+                let nameMatch = child.match(/(?<=Statement__c:)(.*?)(?=, Statement_Category__c:)/);
+
+
 
                 if (mainCategoryMatch && mainCategoryMatch.length > 1) {
                     mainCategory = mainCategoryMatch[1].trim();
