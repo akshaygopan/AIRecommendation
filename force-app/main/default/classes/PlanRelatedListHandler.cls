@@ -173,7 +173,28 @@ public with sharing class PlanRelatedListHandler {
         } else {
             System.debug('No record found with the given Id: ' + ActionRecordId);
         }
-    }    
+    }  
+    
+    @AuraEnabled
+    public static void setOtherActionMutiple (String ActionRecordId, List<String> otherActions, List<String> unquieIds){
+        //System.debug('ActionRecordId - '+ActionRecordId);
+        //System.debug('otherAction - '+otherAction);
+        Recommended_Action__c recAction = [SELECT Id, Name, Action__c, Other_Data__c, Other_Unquie_ID__c FROM Recommended_Action__c WHERE Id = :ActionRecordId  LIMIT 1];
+
+        if (recAction != null && otherActions != null)  {
+            String concatenatedString = String.join(otherActions, ' | ');
+            recAction.Action__c = 'Other - ' + concatenatedString;
+
+            String unquieIdString = String.join(unquieIds, ' | ');
+            recAction.Other_Unquie_ID__c = unquieIdString;
+    
+            System.debug('Other updated: ' + recAction.Action__c);
+    
+            update recAction;
+        } else {
+            System.debug('No record found with the given Id: ' + ActionRecordId);
+        }
+    }       
 
 
     @AuraEnabled(cacheable=true)

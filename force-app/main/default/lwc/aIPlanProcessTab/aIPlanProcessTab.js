@@ -28,6 +28,7 @@ import setActionIsSelected from '@salesforce/apex/PlanRelatedListHandler.setActi
 import getOtherActionList from '@salesforce/apex/PlanRelatedListHandler.getOtherActionList';
 import setOtherAction from '@salesforce/apex/PlanRelatedListHandler.setOtherAction';
 import setOtherActionNew from '@salesforce/apex/PlanRelatedListHandler.setOtherActionNew';
+import setOtherActionMutiple from '@salesforce/apex/PlanRelatedListHandler.setOtherActionMutiple';
 
 
 export default class AIPlanProcessTab extends LightningElement {
