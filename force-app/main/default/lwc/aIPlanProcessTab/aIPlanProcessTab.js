@@ -168,7 +168,7 @@ export default class AIPlanProcessTab extends LightningElement {
                                 if(action.label.startsWith('Other')){
                                     // console.log(action.label);
                                     // console.log(action.id);
-                                    setOtherAction({ ActionRecordId: action.id, otherAction: event.detail.value})
+                                    setOtherActionNew({ ActionRecordId: action.id, otherAction: event.detail.value, uniqueId: uniqueId})
             .then(() => {
                 // Update successful
                 // console.log('otherAction updated to successfully!!');
