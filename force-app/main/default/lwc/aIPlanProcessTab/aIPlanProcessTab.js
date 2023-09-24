@@ -127,7 +127,7 @@ export default class AIPlanProcessTab extends LightningElement {
                 this.otherActionsOptions = this.otherActions.map(action => {
                     return {
                         label: action.ymcaswo_k2__Action__c,
-                        value: action.ymcaswo_k2__Action__c  // Adjust based on your data structure
+                        value: action.Import_ID__c  // Adjust based on your data structure
                     };
                 });
                 // console.log(this.otherActionsOptions);
@@ -150,13 +150,20 @@ export default class AIPlanProcessTab extends LightningElement {
     @track selectedValues = [];
 
     handleSelect(event) {
+        console.log(event);
+        console.log('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+        alert('hi');
+        debugger;
         const uniqueId = event.target.dataset.id;
+        console.log('here is the otherid');
+        console.log(event.detail.value);
         this.selectedValues[uniqueId] = event.detail.value;
         // console.log(event.detail.value);
         // console.log(this.treees);
         const mainCategorys = event.target.dataset.item;
         const categorys = event.target.dataset.inner;
         const subCategorys = event.target.dataset.subs;
+        const importIdC = event.detail.value;
         for (let mainCategory in this.treees) {
             if(mainCategory == mainCategorys){            
                 for (let category in this.treees[mainCategory]) {
@@ -168,7 +175,7 @@ export default class AIPlanProcessTab extends LightningElement {
                                 if(action.label.startsWith('Other')){
                                     // console.log(action.label);
                                     // console.log(action.id);
-                                    setOtherActionNew({ ActionRecordId: action.id, otherAction: event.detail.value, uniqueId: uniqueId})
+                                    setOtherActionNew({ ActionRecordId: action.id, otherAction: event.detail.value, uniqueId: importIdC})
             .then(() => {
                 // Update successful
                 // console.log('otherAction updated to successfully!!');
