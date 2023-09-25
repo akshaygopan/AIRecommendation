@@ -99,11 +99,12 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
   /* justify-content: space-between; */
 }
 
 .top-box {
-  height: 25%;
+  height: 47%;
   background-color: #81D7D7;
   margin-bottom: 10px;
   border-radius: 5px;
