@@ -62,7 +62,7 @@ export default class AIPlanProcessTab extends LightningElement {
     get checkActionFieldName() {
         const fieldValue = getFieldValue(this.planChild.data, AUTO_REC_FEILD_NAME);
         const isList = Array.isArray(fieldValue);
-        console.log('Is ACTION_FEILD_NAME a list?', isList);
+        // console.log('Is ACTION_FEILD_NAME a list?', isList);
         return fieldValue;
     }
 
@@ -75,15 +75,15 @@ export default class AIPlanProcessTab extends LightningElement {
     @track error;
     @wire(getOtherActionList, { category: '$category', indicator:'$indicator'})
     wiredResult2({ error, data }) {
-        console.log('wiredResult1');
+        // console.log('wiredResult1');
         if (data) {
-            console.log('HAS DATA Other Actions');
+            // console.log('HAS DATA Other Actions');
          
             this.otherActions = data;
-            console.log(this.otherActions);
+            // console.log(this.otherActions);
 
         } else if (error) {
-            console.log('ERROR Other Actions');
+            // console.log('ERROR Other Actions');
             this.errorx = error;
         }
     }
@@ -119,6 +119,7 @@ export default class AIPlanProcessTab extends LightningElement {
         this.item = event.target.dataset.item;
         // console.log(`Selected value is: ${this.item}`);
         this.inner = event.target.dataset.inner;
+        this.innerinner = event.target.dataset.subs;
         // console.log(`Selected value is: ${this.inner}`);
         // console.log('STAAAAAAAAAAAAAAARRRRRRRRRRRRRTTTT');
         getOtherActionList({ category: this.item, indicator: this.inner })
@@ -127,9 +128,17 @@ export default class AIPlanProcessTab extends LightningElement {
                 this.otherActionsOptions = this.otherActions.map(action => {
                     return {
                         label: action.ymcaswo_k2__Action__c,
-                        value: action.Import_ID__c  // Adjust based on your data structure
+                        value: action.ymcaswo_k2__Action__c,
+                        importId: action.Import_ID__c,   // Adjust based on your data structure
+                        item: this.item,
+                        inner: this.inner,
+                        innerinner: this.innerinner
+                        // Adjust based on your data structure
                     };
                 });
+                // this.otherActionsOptions.forEach(option => {
+                //     console.log(`Label: ${option.label}, Value: ${option.value}, Item: ${option.item}, Inner: ${option.inner}, InnerInner: ${option.innerinner}, importId: ${option.importId}`);
+                // });
                 // console.log(this.otherActionsOptions);
                 // console.log(this.otherActions);
                 this.hasLoadedData = true;
@@ -150,20 +159,30 @@ export default class AIPlanProcessTab extends LightningElement {
     @track selectedValues = [];
 
     handleSelect(event) {
-        console.log(event);
-        console.log('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
-        alert('hi');
-        debugger;
         const uniqueId = event.target.dataset.id;
-        console.log('here is the otherid');
-        console.log(event.detail.value);
         this.selectedValues[uniqueId] = event.detail.value;
-        // console.log(event.detail.value);
-        // console.log(this.treees);
+        // console.log(event.target.value);
+        // console.log(event.target.dataset.item);
+        // console.log(event.target.dataset.inner);
+        // console.log(event.target.dataset.subs);
         const mainCategorys = event.target.dataset.item;
         const categorys = event.target.dataset.inner;
         const subCategorys = event.target.dataset.subs;
-        const importIdC = event.detail.value;
+        const allData = this.otherActionsOptions;
+        const foundData = allData.find(data => 
+            data.label === this.selectedValues[uniqueId] && 
+            data.value === this.selectedValues[uniqueId] && 
+            data.item === mainCategorys &&
+            data.inner === categorys &&
+            data.innerinner === subCategorys
+        );
+    
+        const importId = foundData.importId;
+        // console.log(importId);
+        // const importIdC = selectedOption.importId;
+        // console.log(importIdC);
+        // console.log(event.detail.value);
+        // console.log(this.treees);
         for (let mainCategory in this.treees) {
             if(mainCategory == mainCategorys){            
                 for (let category in this.treees[mainCategory]) {
@@ -175,7 +194,7 @@ export default class AIPlanProcessTab extends LightningElement {
                                 if(action.label.startsWith('Other')){
                                     // console.log(action.label);
                                     // console.log(action.id);
-                                    setOtherActionNew({ ActionRecordId: action.id, otherAction: event.detail.value, uniqueId: importIdC})
+                                    setOtherActionNew({ ActionRecordId: action.id, otherAction: event.detail.value, uniqueId: importId})
             .then(() => {
                 // Update successful
                 // console.log('otherAction updated to successfully!!');
@@ -317,7 +336,7 @@ export default class AIPlanProcessTab extends LightningElement {
             this.error = undefined;
         } else if (error) {
             this.error = error;
-            console.log('Has error 2');
+            // console.log('Has error 2');
             this.relatedLists = undefined;
         }
     }
@@ -338,14 +357,14 @@ export default class AIPlanProcessTab extends LightningElement {
     })listInfo({ error, data }) {
         if (data) {
             this.statementRecords = data.records;
-            console.log('some data exist');
+            // console.log('some data exist');
             //console.log(statementRecords);
             this.error = undefined;
             this.statementRecords.forEach(record => {
                 this.statementIds.push(record.fields.Id.value);
             })
-            console.log('VVVVVVVV');
-            console.log(this.statementIds);
+            // console.log('VVVVVVVV');
+            // console.log(this.statementIds);
 
             this.statementIds.forEach(id => {
                 this.currentId = id;
@@ -354,8 +373,8 @@ export default class AIPlanProcessTab extends LightningElement {
 
         } else if (error) {
             this.error = error;
-            console.log('error exist 3');
-            console.log(error);
+            // console.log('error exist 3');
+            // console.log(error);
             this.statementRecords = undefined;
         }
     }
@@ -408,14 +427,14 @@ export default class AIPlanProcessTab extends LightningElement {
 
     @wire(getPlanRelatedLists, { planId: '$recordId' })
 wiredResult({ error, data }) {
-    console.log('wiredResult');
+    // console.log('wiredResult');
     if (data) {
         // debugger;
         // console.log(data);
         // console.log('HAS DATA getPlanRelatedLists');
         this.childToSubChildMap = data;
 
-        console.log(this.childToSubChildMap);
+        // console.log(this.childToSubChildMap);
 
         if (this.childToSubChildMap && typeof this.childToSubChildMap === 'object') {
 
@@ -424,7 +443,7 @@ wiredResult({ error, data }) {
             for (let child in this.childToSubChildMap) {
 
 
-                console.log(child);
+                // console.log(child);
 
                 let mainCategory, category, name, actions = [];
 
@@ -500,24 +519,24 @@ let mainCategoryItem = {
 this.info = tempInfo;
 
             for (let mainCategory in tree) {
-                console.log(mainCategory);
+                // console.log(mainCategory);
                 let categories = tree[mainCategory];
                 this.mainCategoryData[mainCategory] = categories;
                 this.main_category = mainCategory;
                 for (let category in tree[mainCategory]) {
-                    console.log("  " + category);
+                    // console.log("  " + category);
                     this.sub_category = category;
                     for (let name in tree[mainCategory][category]) {
-                        console.log("    " + name);
+                        // console.log("    " + name);
                         this.name = name;
                         for (let actions of tree[mainCategory][category][name]) {
-                            console.log("      " + actions.join(', '));
+                            // console.log("      " + actions.join(', '));
                         }
                     }
                 }
             }
         } else {
-            console.log('this.childToSubChildMap is not an object');
+            // console.log('this.childToSubChildMap is not an object');
         }
     }
 
@@ -534,7 +553,7 @@ handleChange(event) {
     let checkboxValue = event.target.checked ? 1 : 0; // Convert to integer
     let recordId = event.target.dataset.id;
     debugger;
-    console.log(recordId);
+    // console.log(recordId);
 
 
     setActionIsSelected({ActionRecordId: recordId, isSelected: checkboxValue})
@@ -543,7 +562,7 @@ handleChange(event) {
         })
         .catch(error => {
             debugger;
-            console.log('Error updating record: ' + error);
+            // console.log('Error updating record: ' + error);
             //alert('Error updating record: ' + error);
         });
 }
@@ -572,7 +591,7 @@ handleComboboxChange(event) {
     this.selectedValue = event.detail.value;
     // console.log(`Selected value is: ${event.detail.value}`);
     this.selectedinner = event.target.dataset.id;
-    console.log(`Selected value is: ${this.selectedinner}`);
+    // console.log(`Selected value is: ${this.selectedinner}`);
 }
 
 
