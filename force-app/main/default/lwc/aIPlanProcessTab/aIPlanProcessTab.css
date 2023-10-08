@@ -89,6 +89,8 @@
   font-size: 16px;
 }
 
+
+
 .cat_box {
   background-color: #E8F5E2;
   padding: 20px;
@@ -290,3 +292,4 @@ input[type="checkbox"]:checked {
 .additional-container .cat_box {
   width: 50%;
 }
+
