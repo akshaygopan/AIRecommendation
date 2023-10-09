@@ -4,6 +4,7 @@ import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { getRelatedListRecords, getRelatedListsInfo } from 'lightning/uiRelatedListApi';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import getAllPlanOtherActionLists from '@salesforce/apex/PlanRelatedListHandler.getAllPlanOtherActionLists';
 
 import getPlanRelatedLists from '@salesforce/apex/PlanRelatedListHandler.getPlanRelatedLists';
 
@@ -80,19 +81,19 @@ export default class AIPlanProcessTab extends LightningElement {
     treekeys = [];
     async fetchData() {
         try {
-            // Fetch the first set of data
             const firstData = await getPlanRelatedLists({ planId: this.recordId });
             this.rawData = firstData;
+            // console.log(this.rawData)
     
-            // Fetch the second set of data
-            const secondData = await getOtherActionList({ category: this.category, indicator: this.indicator });
+            const secondData = await getAllPlanOtherActionLists({ planId: this.recordId});
             this.secondTypeData = secondData;
+            // console.log(this.secondTypeData)
     
-            // Transform the data
             const transformedData = this.transformData(this.rawData, this.secondTypeData);
             this.trees = transformedData;
-            console.log('EEEEEEEEEEHHHHHHHHHHHH!!!!!');
-            console.log(transformedData);
+            // console.log('This is the treeeeeeeeeeeeeeeeeeee!!!!!');
+            // console.log(this.trees)
+            // console.log(transformedData);
         } catch (error) {
             console.error("Error fetching data", error);
         }
@@ -168,6 +169,25 @@ export default class AIPlanProcessTab extends LightningElement {
         }
     }
 
+    for (const mainCategoryObj of result) {
+        for (const categoryObj of mainCategoryObj.children) {
+            for (const statementObj of categoryObj.children) {
+                const uniqueMap = new Map();
+
+                statementObj["OtherActions"] = statementObj["OtherActions"].filter(action => {
+                    if (uniqueMap.has(action.label)) {
+                        return false;
+                    } else {
+                        uniqueMap.set(action.label, true);
+                        return true;
+                    }
+                });
+
+                statementObj["OtherActions"].sort((a, b) => a.label.localeCompare(b.label));
+            }
+        }
+    }
+    result.sort((a, b) => a.name.localeCompare(b.name));
     return result;
 };
     
@@ -258,7 +278,7 @@ export default class AIPlanProcessTab extends LightningElement {
 
 
 
-@track value = '';  // Holds the selected combobox value
+@track value = ''; 
 
 
 @track selectedItems = '';
@@ -286,23 +306,7 @@ handleSelection() {
     this.selectedItems = labels.join(', ');
 }
 
-
-
-options = [
-    {
-      label: 'Option 1',
-      value: 'option1', 
-      selected: true,
-    },
-    {
-      label: 'Option 2',
-      value: 'option2'
-    },
-    {
-      label: 'Option 3',
-      value: 'option3'
-    }
-  ];    
+   
 
   selectedOptions = [];
   
@@ -325,14 +329,14 @@ options = [
 
     let actionRecordId = (this.selectedOptions[0] && this.selectedOptions[0].parent_id) ? this.selectedOptions[0].parent_id : null;
 
-    alert("Other Actions: " + otherActionList);
-    alert("Unique IDs: " + uniqueIds);
-    alert("Action Record ID: " + actionRecordId);
+    // alert("Other Actions: " + otherActionList);
+    // alert("Unique IDs: " + uniqueIds);
+    // alert("Action Record ID: " + actionRecordId);
 
     if (actionRecordId) {
         setOtherActionMutiple({ ActionRecordId: actionRecordId, otherAction: otherActionList, uniqueId: uniqueIds})
             .then(() => {
-                alert('OtherAction updated successfully!');
+                // alert('OtherAction updated successfully!');
             })
             .catch(error => {
                 alert('OtherAction update failed! ' + error);
@@ -342,7 +346,7 @@ options = [
   }
   
   changeActionStatus(event) {
-    let checkboxValue = event.target.checked ? 1 : 0; // Convert to integer
+    let checkboxValue = event.target.checked ? 1 : 0;
     let recordId = event.target.dataset.id;
     // console.log(recordId);
 
@@ -353,8 +357,8 @@ options = [
         })
         .catch(error => {
             debugger;
-            console.log('Error updating record: ' + error);
-            alert('Error updating record: ' + error);
+            // console.log('Error updating record: ' + error);
+            // alert('Error updating record: ' + error);
         });
 }
 
