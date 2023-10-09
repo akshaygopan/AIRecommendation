@@ -24,7 +24,8 @@ public with sharing class PlanRelatedListHandler {
         
         for(Auto_Recomandation__c child : childToSubChildMap.keySet())
         {
-            System.debug('Child Object: ' + child.Name);
+            System.debug('Child Object: ' + child.Name + ' - ' + child.Statement__c + ' - ' + child.Id);
+            //System.debug('Child Object id: ' + child.Id);
             List<Recommended_Action__c> subChildList = childToSubChildMap.get(child);
             for(Recommended_Action__c subChild : subChildList)
             {
@@ -98,10 +99,7 @@ public with sharing class PlanRelatedListHandler {
                                                   (ymcaswo_k2__Custom__c = false AND ymcaswo_k2__Assessment_Category__c INCLUDES (:category) AND ymcaswo_k2__Assessment_Indicator__c INCLUDES (:indicator)) OR
                                                  (ymcaswo_k2__Custom__c = false AND ymcaswo_k2__Assessment_Category__c INCLUDES (:category) AND ymcaswo_k2__Assessment_Indicator__c = null) ORDER BY ymcaswo_k2__Action__c];
 
-        // for (ymcaswo_k2__Action__c action : actionList) 
-        // {
-        //     System.debug('Action Object: ' + action.Name);
-        // }
+
         //return actionList;
 
         Set<String> uniqueActionNames = new Set<String>();
@@ -114,7 +112,12 @@ public with sharing class PlanRelatedListHandler {
             }
         }
 
-
+		System.debug('Action List Size: ' + uniqueActions.size());
+        
+        for (ymcaswo_k2__Action__c action : uniqueActions) 
+        {
+            System.debug('Action Object: ' + action.ymcaswo_k2__Action__c);
+        }
 
         return uniqueActions;
 
@@ -158,16 +161,19 @@ public with sharing class PlanRelatedListHandler {
     }
 
     @AuraEnabled
-    public static void setOtherActionNew (String ActionRecordId, String otherAction, String unquieId){
-        //System.debug('ActionRecordId - '+ActionRecordId);
-        //System.debug('otherAction - '+otherAction);
+    public static void setOtherActionNew (String ActionRecordId, String otherAction, String uniqueId){
+        System.debug('ActionRecordId - '+ActionRecordId);
+        System.debug('otherAction - '+otherAction);
+        System.debug('XXXX otherAction - '+uniqueId);
+        
         Recommended_Action__c recAction = [SELECT Id, Name, Action__c, Other_Data__c, Other_Unquie_ID__c FROM Recommended_Action__c WHERE Id = :ActionRecordId  LIMIT 1];
 
         if (recAction != null && otherAction != null)  {
             recAction.Action__c = 'Other - ' + otherAction;
-            recAction.Other_Unquie_ID__c = unquieId;
+            recAction.Other_Unquie_ID__c = uniqueId;
     
-            System.debug('Other updated: ' + recAction.Action__c);
+            System.debug('Other updated New: ' + recAction.Action__c );
+            System.debug('Other updated New ID: ' + recAction.Other_Unquie_ID__c);
     
             update recAction;
         } else {
@@ -176,19 +182,29 @@ public with sharing class PlanRelatedListHandler {
     }  
     
     @AuraEnabled
-    public static void setOtherActionMutiple (String ActionRecordId, List<String> otherActions, List<String> unquieIds){
-        //System.debug('ActionRecordId - '+ActionRecordId);
-        //System.debug('otherAction - '+otherAction);
+    public static void setOtherActionMutiple (String ActionRecordId, List<String> otherAction, List<String> uniqueId){
+        System.debug('setOtherActionMutiple Called!!');
+        System.debug('ActionRecordId - '+ActionRecordId);
+        System.debug('otherAction - '+ otherAction.size());
+        System.debug('unquieIds - '+ uniqueId.size());
+        
+        for (String other : otherAction) 
+        {
+            System.debug('other Action item - '+ other);
+        }
+        
+        
         Recommended_Action__c recAction = [SELECT Id, Name, Action__c, Other_Data__c, Other_Unquie_ID__c FROM Recommended_Action__c WHERE Id = :ActionRecordId  LIMIT 1];
 
-        if (recAction != null && otherActions != null)  {
-            String concatenatedString = String.join(otherActions, ' | ');
+        if (recAction != null && otherAction != null)  {
+            String concatenatedString = String.join(otherAction, ' | ');
             recAction.Action__c = 'Other - ' + concatenatedString;
 
-            String unquieIdString = String.join(unquieIds, ' | ');
+            String unquieIdString = String.join(uniqueId, '|');
             recAction.Other_Unquie_ID__c = unquieIdString;
     
             System.debug('Other updated: ' + recAction.Action__c);
+            System.debug('Other updated id: ' + recAction.Other_Unquie_ID__c);
     
             update recAction;
         } else {
@@ -230,4 +246,63 @@ public with sharing class PlanRelatedListHandler {
         return childToSubChildMap;
 
     }
+    
+    
+    @AuraEnabled(cacheable=true)
+    public static List<ymcaswo_k2__Action__c> getAllPlanOtherActionLists (String planId){
+        
+        List<ymcaswo_k2__Action__c> allActions = new List<ymcaswo_k2__Action__c>();
+         
+        List<Auto_Recomandation__c> statementRecords = [SELECT Id,Name, Statement_ID__c, Statement__c, Statement_Category__c, Statement_Main_Catergory__c FROM Auto_Recomandation__c WHERE Auto_Settlement_Plan__c = :planId];
+
+        List<Map<String, String>> topicList = new List<Map<String, String>>();
+        Set<String> uniqueCombinations = new Set<String>();
+        
+        for (Auto_Recomandation__c record : statementRecords) {
+            String mainCategory = record.Statement_Main_Catergory__c;
+            String category = record.Statement_Category__c;
+            String combination = mainCategory + '_' + category;
+        
+            // Check if this combination is unique
+            if (!uniqueCombinations.contains(combination)) {
+                uniqueCombinations.add(combination);
+                
+                System.debug('combination - ' + combination);
+        
+                // Create a map and add it to the topicList
+                Map<String, String> topicMap = new Map<String, String>{
+                    'Statement_Main_Catergory__c' => mainCategory,
+                    'Statement_Category__c' => category
+                };
+                topicList.add(topicMap);
+            }
+		}
+        
+        System.debug('topicMap size - ' + topicList.size());
+        
+        if (topicList.size() > 0){
+            for (Map<String, String> topicMap : topicList) {
+                String category = topicMap.get('Statement_Main_Catergory__c');
+                String indicator = topicMap.get('Statement_Category__c');
+                
+                // Call getOtherActionList with mainCategory and category as parameters
+                List<ymcaswo_k2__Action__c> actionsForTopic = getOtherActionList(category, indicator);
+                
+                 System.debug('getOtherActionList size - ' + actionsForTopic.size() +  ' | ' + category +  ' | ' + indicator);
+                
+                // Add the results to the overall list of actions
+                allActions.addAll(actionsForTopic);
+            }
+        }
+        
+        
+        System.debug('allAction size - ' + allActions.size());
+        
+        return allActions;
+
+    }
+    
+    
 }
+    
+    
