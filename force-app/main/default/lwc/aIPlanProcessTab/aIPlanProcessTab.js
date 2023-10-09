@@ -87,7 +87,8 @@ export default class AIPlanProcessTab extends LightningElement {
     
             const secondData = await getAllPlanOtherActionLists({ planId: this.recordId});
             this.secondTypeData = secondData;
-            // console.log(this.secondTypeData)
+            console.log('here is the seconddddd')
+            console.log(this.secondTypeData)
     
             const transformedData = this.transformData(this.rawData, this.secondTypeData);
             this.trees = transformedData;
@@ -137,38 +138,44 @@ export default class AIPlanProcessTab extends LightningElement {
     }
 
     for (const action of secondTypeData) {
-        const categories = action["ymcaswo_k2__Assessment_Category__c"].split(";");
-
+        const categories = action["AIAction_Dropdown__c"].split("|");
+        if (categories.length !== 2) continue;
+    
+        const mainCategory = categories[0].trim();
+        const category = categories[1].trim();
+    
         for (const mainCategoryObj of result) {
-            if (categories.includes(mainCategoryObj.name)) {
+            if (mainCategoryObj.name === mainCategory) {
                 for (const categoryObj of mainCategoryObj.children) {
-                    for (const statementObj of categoryObj.children) {
-                        let isSelected = false;
-                        let parent_id = null;
-
-                        for (const recommendedAction of statementObj["Recommended_Actions__r"]) {
-                            if (recommendedAction["Action__c"].startsWith("Other")) {
-                                parent_id = recommendedAction["Id"];
+                    if (categoryObj.name === category) {
+                        for (const statementObj of categoryObj.children) {
+                            let isSelected = false;
+                            let parent_id = null;
+    
+                            for (const recommendedAction of statementObj["Recommended_Actions__r"]) {
+                                if (recommendedAction["Action__c"].startsWith("Other")) {
+                                    parent_id = recommendedAction["Id"];
+                                }
+                                if (recommendedAction["Action__c"].startsWith("Other -") && recommendedAction["Action__c"].includes(action["ymcaswo_k2__Action__c"])) {
+                                    isSelected = true;
+                                    break;
+                                }
                             }
-                            if (recommendedAction["Action__c"].startsWith("Other -") && recommendedAction["Action__c"].includes(action["ymcaswo_k2__Action__c"])) {
-                                isSelected = true;
-                                break;
-                            }
+    
+                            statementObj["OtherActions"].push({
+                                ...action,
+                                selected: isSelected,
+                                label: action["ymcaswo_k2__Action__c"],
+                                value: action["Import_ID__c"],
+                                parent_id: parent_id
+                            });
                         }
-
-                        statementObj["OtherActions"].push({
-                            ...action,
-                            selected: isSelected,
-                            label: action["ymcaswo_k2__Action__c"],
-                            value: action["Import_ID__c"],
-                            parent_id: parent_id
-                        });
                     }
                 }
             }
         }
     }
-
+    
     for (const mainCategoryObj of result) {
         for (const categoryObj of mainCategoryObj.children) {
             for (const statementObj of categoryObj.children) {
