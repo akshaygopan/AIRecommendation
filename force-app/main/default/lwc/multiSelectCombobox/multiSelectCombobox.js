@@ -10,6 +10,7 @@ export default class MultiSelectCombobox extends LightningElement {
   @api required = false;
   @api singleSelect = false;
   @api showPills = false;
+  @track searchQuery = '';
 
   @track currentOptions = [];
   selectedItems = [];
@@ -18,6 +19,18 @@ export default class MultiSelectCombobox extends LightningElement {
   isLoaded = false;
   isVisible = false;
   isDisabled = false;
+
+  handleSearch(event) {
+    this.searchQuery = event.target.value;
+    this.filterOptions();
+  }
+
+  get filteredOptions() {
+    const query = this.searchQuery.toLowerCase();
+    return this.currentOptions.filter(
+      (option) => option.label.toLowerCase().includes(query)
+    );
+  }
 
   connectedCallback() {
     this.isDisabled = this.disabled || this.readOnly;
@@ -50,8 +63,9 @@ export default class MultiSelectCombobox extends LightningElement {
     this.change(event);
   }
 
+
   handleClick() {
-    // initialize picklist options on first click to make them editable
+    // initialize picklist options on the first click to make them editable
     if (this.isLoaded === false) {
       this.currentOptions = JSON.parse(JSON.stringify(this.options));
       this.isLoaded = true;
