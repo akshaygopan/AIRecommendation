@@ -33,7 +33,7 @@ import setOtherActionMutiple from '@salesforce/apex/PlanRelatedListHandler.setOt
 
 
 export default class AIPlanProcessTab extends LightningElement {
-
+    showModal = false;
     planId = 'a33Aw0000000QVZIA2'; 
 
     @api recordId;
@@ -369,4 +369,50 @@ handleSelection() {
         });
 }
 
+handleUncheckAll(){
+    this.showModal = true;
+    console.log('working');
 }
+
+// confirmUncheckAll() {
+   
+//     const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
+//     checkboxes.forEach(checkbox => { checkbox.checked = false; });
+    
+//     setTimeout (function(){ this.showModal = false; },2000);
+   
+//         this.showModal = false;
+    
+// }
+
+confirmUncheckAll() {
+    return new Promise((resolve) => {
+        
+        const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
+        
+        // Uncheck all checkboxes
+        checkboxes.forEach(checkbox => { checkbox.checked = false; });
+
+        
+        setTimeout(resolve, 1000);
+    }).then(() => {
+        
+        this.showModal = false;
+    });
+}
+
+
+
+
+cancelUncheckAll() {
+    
+    this.showModal = false;
+}
+
+
+
+
+}
+
+
+

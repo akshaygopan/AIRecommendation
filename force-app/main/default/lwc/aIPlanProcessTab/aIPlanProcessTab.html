@@ -1,9 +1,10 @@
 <template>
     <lightning-card title="AIPlanProcessTab" icon-name="custom:custom14">
-
+        <div class="uncheck-all-button">
+            <lightning-button label="Uncheck All" onclick={handleUncheckAll} variant="brand"></lightning-button>
+        </div>
         <template for:each={trees} for:item="mainCategory">
             <div class="main_cat_box" key={mainCategory.id}>
-
                 <div class="title-rectangle">
                     <span class="title">{mainCategory.name}</span>
                 </div>
@@ -52,5 +53,19 @@
                 </template>
             </div>
         </template>
+        <!-- Confirmation Modal -->
+        <template if:true={showModal}>
+            <div class="confirmation-modal">
+                <div class="modal-content">
+                    <p>Are you sure you want to uncheck all?</p>
+                    <div class="modal-buttons">
+                        <lightning-button label="No"
+                            onclick={cancelUncheckAll}></lightning-button>
+                        <lightning-button label="Yes" onclick={confirmUncheckAll}
+                            variant="brand"></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </template> 
     </lightning-card>
 </template>
