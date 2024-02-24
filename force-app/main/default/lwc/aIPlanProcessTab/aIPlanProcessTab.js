@@ -30,10 +30,10 @@ import getOtherActionList from '@salesforce/apex/PlanRelatedListHandler.getOther
 import setOtherAction from '@salesforce/apex/PlanRelatedListHandler.setOtherAction';
 import setOtherActionNew from '@salesforce/apex/PlanRelatedListHandler.setOtherActionNew';
 import setOtherActionMutiple from '@salesforce/apex/PlanRelatedListHandler.setOtherActionMutiple';
-
+import setActionsAsNotSelected from '@salesforce/apex/PlanRelatedListHandler.setActionsAsNotSelected'
 
 export default class AIPlanProcessTab extends LightningElement {
-    showModal = false;
+    
     planId = 'a33Aw0000000QVZIA2'; 
 
     @api recordId;
@@ -71,6 +71,7 @@ export default class AIPlanProcessTab extends LightningElement {
     @track rawData;
     @track secondTypeData;
     @track trees = [];
+    @track showModal = false;
     @api category;
     @api indicator;
     
@@ -367,52 +368,109 @@ handleSelection() {
             // console.log('Error updating record: ' + error);
             // alert('Error updating record: ' + error);
         });
+    
+            // Call backend method to uncheck all selected actions
+    // setActionsAsNotSelected({ actionIds })
+    //             .then(result => {
+    //                 // Handle success
+    //                // console.log('Actions set as not selected successfully:', result);
+    //             })
+    //             .catch(error => {
+    //                 // Handle errors
+    //                // console.error('Error setting actions as not selected:', error);
+    //             });
+        
+
+
 }
 
-handleUncheckAll(){
-    this.showModal = true;
-    console.log('working');
-}
+//  handleUncheckAll(){
+//      this.showModal = true;
+//  }
 
-// confirmUncheckAll() {
+// //  confirmUncheckAll() {
    
-//     const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
-//     checkboxes.forEach(checkbox => { checkbox.checked = false; });
+// //      const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
+// //      checkboxes.forEach(checkbox => { checkbox.checked = false; });
     
-//     setTimeout (function(){ this.showModal = false; },2000);
+// //      setTimeout (function(){ this.showModal = false; },2000);
    
-//         this.showModal = false;
+// //          this.showModal = false;
     
+// //  }
+
+//  confirmUncheckAll() {
+//      return new Promise((resolve) => {
+        
+//          const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
+         
+//         //  Uncheck all checkboxes
+//          checkboxes.forEach(checkbox => { checkbox.checked = false; });
+
+        
+//         setTimeout(resolve, 1000);
+//      }).then(() => {
+        
+//          this.showModal = false;
+//      });
+//  }
+
+
+
+
+//  cancelUncheckAll() {
+    
+//      this.showModal = false;
+//  }
 // }
+// 
 
-confirmUncheckAll() {
-    return new Promise((resolve) => {
-        
-        const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
-        
-        // Uncheck all checkboxes
-        checkboxes.forEach(checkbox => { checkbox.checked = false; });
-
-        
-        setTimeout(resolve, 1000);
-    }).then(() => {
-        
-        this.showModal = false;
-    });
+handleUncheckAll() {
+    this.showModal = true;
 }
-
-
-
 
 cancelUncheckAll() {
-    
     this.showModal = false;
 }
-
-
-
-
+async confirmUncheckAll() {
+    this.showModal = false;
+    let selectedActions = [];
+    // connectedCallback();
+    try {
+    const firstData = await getPlanRelatedLists({ planId: this.recordId });
+    console.log('firstdata test:',firstData);
+    // Iterate through each category and statement to find selected actions
+    firstData.forEach(mainCategory => {
+        mainCategory.children.forEach(category => {
+            category.children.forEach(statement => {
+                statement.Recommended_Actions__r.forEach(action => {
+                    if (action.isSelected__c) {
+                        selectedActions.push(action.Id);
+                    }
+                });
+            });
+        });
+    });
+   console.log("list of actions :",selectedActions);
+    // Call backend method with selected action IDs
+    this.setActionsAsNotSelected(selectedActions);
+} catch (error) {
+            console.error("Error fetching data", error);
+        }
 }
 
+setActionsAsNotSelected(actionIds) {
+    // Call backend method to uncheck all selected actions
+    setActionsAsNotSelected({ actionIds })
+        .then(result => {
+            
+           // console.log('success:', result);
+        })
+        .catch(error => {
+           
+           // console.error('Error setting actions as not selected:', error);
+        });
+}
 
+}
 
