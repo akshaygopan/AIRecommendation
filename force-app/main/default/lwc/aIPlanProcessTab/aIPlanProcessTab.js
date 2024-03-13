@@ -1,114 +1,109 @@
+
 import { LightningElement, wire, api, track } from 'lwc';
 import { getListUi } from 'lightning/uiListApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { getRelatedListRecords, getRelatedListsInfo } from 'lightning/uiRelatedListApi';
-
+ 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import getAllPlanOtherActionLists from '@salesforce/apex/PlanRelatedListHandler.getAllPlanOtherActionLists';
-
+ 
 import getPlanRelatedLists from '@salesforce/apex/PlanRelatedListHandler.getPlanRelatedLists';
-
-
-
+ 
+ 
+ 
 import SETTLEMENT_PLAN_OBJECT from '@salesforce/schema/Auto_Settlement_Plan__c';
 import SETTLEMENT_PLAN_FEILD_ID from '@salesforce/schema/Auto_Settlement_Plan__c.Settlement_Plan_ID__c';
-
+ 
 import AUTO_REC_OBJECT from '@salesforce/schema/Auto_Recomandation__c';
 import AUTO_REC_FEILD_ID from '@salesforce/schema/Auto_Recomandation__c.Action_ID__c';
 import AUTO_REC_FEILD_NAME from '@salesforce/schema/Auto_Recomandation__c.Name';
 import AUTO_REC_FEILD_MAIN_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Main_Catergory__c';
 import AUTO_REC_FEILD_CATEGORY from '@salesforce/schema/Auto_Recomandation__c.Statement_Category__c';
-
-
+ 
+ 
 import ACTION_OBJECT from '@salesforce/schema/Recommended_Action__c';
 import ACTION_FEILD_ID from '@salesforce/schema/Recommended_Action__c.Action_ID__c';
 import ACTION_FEILD_NAME from '@salesforce/schema/Recommended_Action__c.Name';
 import ACTION_FEILD_RECORD_ID from '@salesforce/schema/Recommended_Action__c.Id';
-
+ 
 import setActionIsSelected from '@salesforce/apex/PlanRelatedListHandler.setActionIsSelected';
 import getOtherActionList from '@salesforce/apex/PlanRelatedListHandler.getOtherActionList';
 import setOtherAction from '@salesforce/apex/PlanRelatedListHandler.setOtherAction';
 import setOtherActionNew from '@salesforce/apex/PlanRelatedListHandler.setOtherActionNew';
 import setOtherActionMutiple from '@salesforce/apex/PlanRelatedListHandler.setOtherActionMutiple';
 import setActionsAsNotSelected from '@salesforce/apex/PlanRelatedListHandler.setActionsAsNotSelected'
-
+ 
 export default class AIPlanProcessTab extends LightningElement {
-    
-    planId = 'a33Aw0000000QVZIA2'; 
-
+   
+    planId = 'a33Aw0000000QVZIA2';
+ 
     @api recordId;
-
+ 
     @wire(getRecord, { recordId: "$recordId", fields: [SETTLEMENT_PLAN_FEILD_ID] })
     plan;
-
+ 
     get parentPlanID(){
         return this.plan.data ? getFieldValue(this.plan.data, SETTLEMENT_PLAN_FEILD_ID) : 'null';
-    } 
-
-    @api recoId = 'a32Aw0000000A5pIAE'; 
-    @api recoId2 = 'a32Aw00000009jFIAQ'; 
+    }
+ 
+    @api recoId = 'a32Aw0000000A5pIAE';
+    @api recoId2 = 'a32Aw00000009jFIAQ';
     @api testIDList = ['a32Aw0000000A5pIAE', 'a32Aw00000009jFIAQ'];
-
+ 
     @wire(getRecord, { recordId: '$recoId', fields: [AUTO_REC_FEILD_NAME, ACTION_FEILD_RECORD_ID, AUTO_REC_FEILD_MAIN_CATEGORY, AUTO_REC_FEILD_CATEGORY, ACTION_FEILD_NAME, ] })
     planChild;
-
+ 
     get autoRecFieldName() {
         return getFieldValue(this.planChild.data, AUTO_REC_FEILD_NAME);
     }
-
+ 
     get actionFieldName() {
         return getFieldValue(this.planChild.data, ACTION_FEILD_NAME);
     }
-
+ 
     get checkActionFieldName() {
         const fieldValue = getFieldValue(this.planChild.data, AUTO_REC_FEILD_NAME);
         const isList = Array.isArray(fieldValue);
         // console.log('Is ACTION_FEILD_NAME a list?', isList);
         return fieldValue;
     }
-
-
+ 
+ 
     @track rawData;
     @track secondTypeData;
     @track trees = [];
     @track showModal = false;
     @api category;
     @api indicator;
-    
+   
     connectedCallback() {
         this.fetchData();
     }
-    
+   
     treekeys = [];
     async fetchData() {
         try {
             const firstData = await getPlanRelatedLists({ planId: this.recordId });
             this.rawData = firstData;
-            // console.log(this.rawData)
-    
+   
             const secondData = await getAllPlanOtherActionLists({ planId: this.recordId});
             this.secondTypeData = secondData;
-            console.log('here is the seconddddd')
-            console.log(this.secondTypeData)
-    
+   
             const transformedData = this.transformData(this.rawData, this.secondTypeData);
             this.trees = transformedData;
-            // console.log('This is the treeeeeeeeeeeeeeeeeeee!!!!!');
-            // console.log(this.trees)
-            // console.log(transformedData);
         } catch (error) {
             console.error("Error fetching data", error);
         }
     }
-
+ 
     transformData (data, secondTypeData) {
     let result = [];
-
+ 
     for (const key in data) {
         const mainCategory = key.match(/Statement_Main_Catergory__c:(.+?),/)[1].trim();
         const category = key.match(/Statement_Category__c:(.+?),/)[1].trim();
         const statement = key.match(/Statement__c:(.+?), Statement_Category__c/)[1].trim();
-
+ 
         let mainCategoryObj = result.find(item => item.name === mainCategory);
         if (!mainCategoryObj) {
             mainCategoryObj = {
@@ -118,7 +113,7 @@ export default class AIPlanProcessTab extends LightningElement {
             };
             result.push(mainCategoryObj);
         }
-
+ 
         let categoryObj = mainCategoryObj.children.find(item => item.name === category);
         if (!categoryObj) {
             categoryObj = {
@@ -128,7 +123,7 @@ export default class AIPlanProcessTab extends LightningElement {
             };
             mainCategoryObj.children.push(categoryObj);
         }
-
+ 
         let statementObj = {
             id: String(Math.floor(100000 + Math.random() * 900000)),
             name: statement,
@@ -137,14 +132,14 @@ export default class AIPlanProcessTab extends LightningElement {
         };
         categoryObj.children.push(statementObj);
     }
-
+ 
     for (const action of secondTypeData) {
         const categories = action["AIAction_Dropdown__c"].split("|");
         if (categories.length !== 2) continue;
-    
+   
         const mainCategory = categories[0].trim();
         const category = categories[1].trim();
-    
+   
         for (const mainCategoryObj of result) {
             if (mainCategoryObj.name === mainCategory) {
                 for (const categoryObj of mainCategoryObj.children) {
@@ -152,7 +147,7 @@ export default class AIPlanProcessTab extends LightningElement {
                         for (const statementObj of categoryObj.children) {
                             let isSelected = false;
                             let parent_id = null;
-    
+   
                             for (const recommendedAction of statementObj["Recommended_Actions__r"]) {
                                 if (recommendedAction["Action__c"].startsWith("Other")) {
                                     parent_id = recommendedAction["Id"];
@@ -162,7 +157,7 @@ export default class AIPlanProcessTab extends LightningElement {
                                     break;
                                 }
                             }
-    
+   
                             statementObj["OtherActions"].push({
                                 ...action,
                                 selected: isSelected,
@@ -176,12 +171,12 @@ export default class AIPlanProcessTab extends LightningElement {
             }
         }
     }
-    
+   
     for (const mainCategoryObj of result) {
         for (const categoryObj of mainCategoryObj.children) {
             for (const statementObj of categoryObj.children) {
                 const uniqueMap = new Map();
-
+ 
                 statementObj["OtherActions"] = statementObj["OtherActions"].filter(action => {
                     if (uniqueMap.has(action.label)) {
                         return false;
@@ -190,7 +185,7 @@ export default class AIPlanProcessTab extends LightningElement {
                         return true;
                     }
                 });
-
+ 
                 statementObj["OtherActions"].sort((a, b) => a.label.localeCompare(b.label));
             }
         }
@@ -198,31 +193,31 @@ export default class AIPlanProcessTab extends LightningElement {
     result.sort((a, b) => a.name.localeCompare(b.name));
     return result;
 };
-    
-    
+   
+   
     category = 'Employment';
     indicator = 'Skills';
-
+ 
     @track otherActions = [];
     @track selectedAction;
-
+ 
     get autoRecFieldMainCategory() {
         return 'General';
         // return getFieldValue(this.planChild.data,AUTO_REC_FEILD_MAIN_CATEGORY);
     }
-
+ 
     get autoRecFieldCategory() {
         return getFieldValue(this.planChild.data,AUTO_REC_FEILD_CATEGORY);
     }
-
+ 
     get parentChildID(){
         return this.planChild.data ? getFieldValue(this.planChild.data, AUTO_REC_FEILD_NAME) : 'null';
-    } 
-
+    }
+ 
     get parentChildRecordID(){
         return this.planChild.data ? getFieldValue(this.planChild.data, ACTION_FEILD_RECORD_ID) : 'null';
-    } 
-
+    }
+ 
     error;
     relatedLists;
     @wire(getRelatedListsInfo, {
@@ -237,16 +232,16 @@ export default class AIPlanProcessTab extends LightningElement {
             this.relatedLists = undefined;
         }
     }
-
-
+ 
+ 
     error;
     statementRecords;
     statementIds = [];
-
+ 
     myMap = new Map();
-
+ 
     currentId;
-    
+   
     @wire(getRelatedListRecords, {
         parentRecordId: '$recordId',
         relatedListId: 'Auto_Recomandations__r',
@@ -262,11 +257,11 @@ export default class AIPlanProcessTab extends LightningElement {
             })
             // console.log('VVVVVVVV');
             // console.log(this.statementIds);
-
+ 
             this.statementIds.forEach(id => {
                 this.currentId = id
             })
-
+ 
         } else if (error) {
             this.error = error;
             // console.log('error exist 3');
@@ -274,8 +269,8 @@ export default class AIPlanProcessTab extends LightningElement {
             this.statementRecords = undefined;
         }
     }
-
-
+ 
+ 
     @track childToSubChildMap;
     @track errorx;
     @track main_category;
@@ -283,64 +278,64 @@ export default class AIPlanProcessTab extends LightningElement {
     @track name;
     @track info = [];
     @track mainCategoryData = {};
-
-
-
-@track value = ''; 
-
-
+ 
+ 
+ 
+@track value = '';
+ 
+ 
 @track selectedItems = '';
 @track isDropdownOpen = false;
-
+ 
 get dropdownClass() {
     return this.isDropdownOpen ? 'myComboBox' : 'hidden-combo-box';
 }
-
+ 
 toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
 }
-
+ 
 handleSelection(event) {
     let selectedOptions = this.template.querySelectorAll('input[type="checkbox"]:checked');
     let values = Array.from(selectedOptions).map(ele => ele.value);
     let labels = this.options.filter(option => values.includes(option.value)).map(option => option.label);
     this.selectedItems = labels.join(', ');
 }
-
+ 
 handleSelection() {
     let selectedOptions = this.template.querySelectorAll('input[type="checkbox"]:checked');
     let values = Array.from(selectedOptions).map(ele => ele.value);
     let labels = this.options.filter(option => values.includes(option.value)).map(option => option.label);
     this.selectedItems = labels.join(', ');
 }
-
+ 
    
-
+ 
   selectedOptions = [];
-  
-
+ 
+ 
   handleChange(event) {
     this.selectedOptions = event.detail;
-
+ 
     if (!Array.isArray(this.selectedOptions) || this.selectedOptions.length === 0) {
        console.error("No valid options received");
        return;
     }
-
+ 
     let otherActionList = [];
     let uniqueIds = [];
-    
+   
     for (let i = 0; i < this.selectedOptions.length; i++) {
         otherActionList[i] = this.selectedOptions[i].label;
         uniqueIds[i] = this.selectedOptions[i].value;
     }
-
+ 
     let actionRecordId = (this.selectedOptions[0] && this.selectedOptions[0].parent_id) ? this.selectedOptions[0].parent_id : null;
-
+ 
     // alert("Other Actions: " + otherActionList);
     // alert("Unique IDs: " + uniqueIds);
     // alert("Action Record ID: " + actionRecordId);
-
+ 
     if (actionRecordId) {
         setOtherActionMutiple({ ActionRecordId: actionRecordId, otherAction: otherActionList, uniqueId: uniqueIds})
             .then(() => {
@@ -350,97 +345,89 @@ handleSelection() {
                 alert('OtherAction update failed! ' + error);
             });
     }
-
+ 
   }
-  
+ 
   changeActionStatus(event) {
     let checkboxValue = event.target.checked ? 1 : 0;
     let recordId = event.target.dataset.id;
-    // console.log(recordId);
-
-
-    setActionIsSelected({ActionRecordId: recordId, isSelected: checkboxValue})
-        .then(result => {
-            // alert(`Record updated successfully.`);
+ 
+ 
+    setActionIsSelected( {ActionRecordId: recordId, isSelected: checkboxValue})
+        .then( result => {
         })
         .catch(error => {
-            debugger;
-            // console.log('Error updating record: ' + error);
-            // alert('Error updating record: ' + error);
         });
-    
-            // Call backend method to uncheck all selected actions
-    // setActionsAsNotSelected({ actionIds })
-    //             .then(result => {
-    //                 // Handle success
-    //                // console.log('Actions set as not selected successfully:', result);
-    //             })
-    //             .catch(error => {
-    //                 // Handle errors
-    //                // console.error('Error setting actions as not selected:', error);
-    //             });
-        
-
-
+ 
 }
-
+ 
+// async changeActionStatus2(localRecordId) {
+//     setActionIsSelected({ActionRecordId: localRecordId, isSelected: 0})
+//         .then( result => {
+           
+//         })
+//         .catch(error => {
+//         });
+// }
+ 
+async changeActionStatus3(localActionsIds) {
+    const check = await setActionsAsNotSelected({actionRecordIds:localActionsIds});
+    const newCheck = await this.fetchData();
+}
+ 
 //  handleUncheckAll(){
 //      this.showModal = true;
 //  }
-
+ 
 // //  confirmUncheckAll() {
    
 // //      const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
 // //      checkboxes.forEach(checkbox => { checkbox.checked = false; });
-    
+   
 // //      setTimeout (function(){ this.showModal = false; },2000);
    
 // //          this.showModal = false;
-    
+   
 // //  }
-
+ 
 //  confirmUncheckAll() {
 //      return new Promise((resolve) => {
-        
+       
 //          const checkboxes = this.template.querySelectorAll('input[type="checkbox"]');
          
 //         //  Uncheck all checkboxes
 //          checkboxes.forEach(checkbox => { checkbox.checked = false; });
-
-        
+ 
+       
 //         setTimeout(resolve, 1000);
 //      }).then(() => {
-        
+       
 //          this.showModal = false;
 //      });
 //  }
-
-
-
-
+ 
+ 
+ 
+ 
 //  cancelUncheckAll() {
-    
+   
 //      this.showModal = false;
 //  }
 // }
-// 
-
+//
+ 
 handleUncheckAll() {
     this.showModal = true;
 }
+ 
 
-cancelUncheckAll() {
-    this.showModal = false;
-}
-async confirmUncheckAll() {
+ async confirmUncheckAll() {
     this.showModal = false;
     let selectedActions = [];
-    // connectedCallback();
-    try {
-    const firstData = await getPlanRelatedLists({ planId: this.recordId });
-    console.log('firstdata test:',firstData);
-    // Iterate through each category and statement to find selected actions
-    firstData.forEach(mainCategory => {
+    console.log('firstdata test:',this.trees);
+    // Iterate throughActi each category and statement to find selected actions
+    this.trees.forEach(mainCategory => {
+        console.log(mainCategory);
         mainCategory.children.forEach(category => {
             category.children.forEach(statement => {
                 statement.Recommended_Actions__r.forEach(action => {
@@ -451,19 +438,16 @@ async confirmUncheckAll() {
             });
         });
     });
-   console.log("list of actions :",selectedActions);
-    // Call backend method with selected action IDs
-    this.setActionsAsNotSelected(selectedActions);
-} catch (error) {
-            console.error("Error fetching data", error);
-        }
+    this.changeActionStatus3(selectedActions);
+    // selectedActions.map(x=>console.log(x));
+    // this.setonsAsNotSelected(selectedActions);
 }
-
+ 
 setActionsAsNotSelected(actionIds) {
     // Call backend method to uncheck all selected actions
     setActionsAsNotSelected({ actionIds })
         .then(result => {
-            
+           
            // console.log('success:', result);
         })
         .catch(error => {
@@ -472,5 +456,11 @@ setActionsAsNotSelected(actionIds) {
         });
 }
 
+cancelUncheckAll() {
+    this.showModal = false;
 }
-
+ 
+ 
+}
+ 
+ 
